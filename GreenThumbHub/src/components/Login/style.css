@@ -1,0 +1,20 @@
+/* Màu chữ mặc định */
+.text-default {
+    color: black;
+  }
+  
+  /* Màu chữ khi rê chuột vào */
+  .text-hover {
+    color: blue;
+  }
+  
+  /* Icon mặc định */
+  .icon-default {
+    cursor: pointer;
+  }
+  
+  /* Icon khi rê chuột vào */
+  .icon-hover {
+    cursor: pointer;
+  }
+  
