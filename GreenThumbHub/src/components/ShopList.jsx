@@ -9,7 +9,7 @@ const ShopList = ({ productItems }) => {
   }
   return (
     <Row className="justify-content-center">
-      {productItems.slice(0,3)
+      {productItems
       .map((productItem) => {
         return (
           <ProductCard
