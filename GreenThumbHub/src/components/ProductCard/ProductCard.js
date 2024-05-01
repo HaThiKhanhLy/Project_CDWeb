@@ -4,8 +4,12 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../app/features/cart/cartSlice";
+import numeral from 'numeral';
+import { useState } from "react";
 
 const ProductCard = ({ title, productItem }) => {
+  const price = productItem.price;
+  const salePrice = price - (price * productItem.percentDiscount);
   const dispatch = useDispatch();
   const router = useNavigate();
   const handelClick = () => {
@@ -18,11 +22,11 @@ const ProductCard = ({ title, productItem }) => {
 
   const handleMouseEnter = (event) => {
     event.target.classList.add('hovered');
-};
+  };
 
-const handleMouseLeave = (event) => {
+  const handleMouseLeave = (event) => {
     event.target.classList.remove('hovered');
-};
+  };
   return (
     <Col md={3} sm={5} xs={10} className="product mtop">
       {title === "Sản phẩm giảm giá" ? (
@@ -31,7 +35,7 @@ const handleMouseLeave = (event) => {
       <img
         loading="lazy"
         onClick={() => handelClick()}
-        src={productItem.imgUrl}
+        src={productItem.imageUrl}
         alt=""
       />
       <div className="product-like">
@@ -47,7 +51,7 @@ const handleMouseLeave = (event) => {
           <i className="fa fa-star"></i>
         </div>
         <div className="price">
-          <h4>${productItem.price}</h4>
+          <h4>{numeral(salePrice).format('0,0')}đ</h4>
           <button
             aria-label="Add"
             type="submit"
@@ -55,16 +59,10 @@ const handleMouseLeave = (event) => {
             onClick={() => handelAdd(productItem)}
           >
             <ion-icon name="add"></ion-icon>
-            
+
           </button>
         </div>
 
-        {/* <div className="d-flex justify-content-between flex-lg-wrap">
-          <p className=" text-dark fs-5 fw-bold mb-0">${productItem.price}</p>
-          <a href="#" className="add btn border border-secondary rounded-pill px-3" 
-           onClick={() => handelAdd(productItem)}
-           onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} style={{color: '#416D19'}}><i className="fa fa-shopping-bag me-2" style={{color: '#416D19'}}></i> Add to cart</a>
-        </div> */}
       </div>
 
     </Col>

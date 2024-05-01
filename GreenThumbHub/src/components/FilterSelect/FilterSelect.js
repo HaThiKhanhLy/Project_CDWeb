@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
 import { products } from '../../utils/products';
 import "./filterSelect.css";
-import { RiTreeFill  } from "react-icons/ri";
+import { RiTreeFill } from "react-icons/ri";
 import { IoFilterCircle } from "react-icons/io5";
 import numeral from 'numeral';
 import Slider from 'rc-slider';
@@ -11,13 +11,13 @@ import { FaMoneyBillAlt } from "react-icons/fa";
 
 
 
-const FilterSelect = ({setFilterList}) => {
+const FilterSelect = ({ categorys }) => {
 
   const [showCategories, setShowCategories] = useState(true);
   const [priceRange, setLocalPriceRange] = useState([0, 5000000]);
   const handlePriceChange = (value) => {
     setLocalPriceRange(value);
-   // setPriceRange(value); // Truyền giá trị mới của thanh trượt giá lên component cha
+    // setPriceRange(value); // Truyền giá trị mới của thanh trượt giá lên component cha
   };
 
   useEffect(() => {
@@ -40,104 +40,54 @@ const FilterSelect = ({setFilterList}) => {
     setShowCategories(!showCategories);
   };
 
+  
+
 
   const formatPrice = (price) => {
     return numeral(price).format('0,0');
   };
 
 
-    return (
+  return (
 
-      <div className="mb-3 mt-4">
+    <div className="mb-3 mt-4">
       {showCategories ? (
         <>
-          <h4 className="mb-4"><IoFilterCircle style={{ marginRight: '10px', cursor: 'pointer' }} onClick={toggleCategories}/>Danh mục sản phẩm</h4>
+          <h4 className="mb-4"><IoFilterCircle style={{ marginRight: '10px', cursor: 'pointer' }} onClick={toggleCategories} />Danh mục sản phẩm</h4>
           <ul className="list-unstyled fruite-categorie">
-            <li>
-              <div className="d-flex justify-content-between fruite-name">
-                <a className="style-name mt-2 mp-2">
-                  <RiTreeFill style={{ marginRight: '10px' }}  />Sen đá
-                </a>
-              </div>
-            </li>
-           
-            <li>
-              <div className="d-flex justify-content-between fruite-name">
-                <a className="style-name mt-2 mp-2">
-                  <RiTreeFill style={{ marginRight: '10px' }}  />Sen đá
-                </a>
-              </div>
-            </li>
+            {categorys && categorys.map((category) => (
+              <li key={category.id}>
+                <div className="d-flex justify-content-between fruite-name">
+                  <a className="style-name mt-2 mp-2">
+                    <RiTreeFill style={{ marginRight: '10px' }} />{category.name}
+                  </a>
+                </div>
+              </li>
+            ))}
 
-            <li>
-              <div className="d-flex justify-content-between fruite-name">
-                <a className="style-name mt-2 mp-2">
-                  <RiTreeFill style={{ marginRight: '10px' }}  />Xương rồng
-                </a>
-              </div>
-            </li>
 
-            <li>
-              <div className="d-flex justify-content-between fruite-name">
-                <a className="style-name mt-2 mp-2">
-                  <RiTreeFill style={{ marginRight: '10px' }}  />Kiểng lá
-                </a>
-              </div>
-            </li>
-
-            <li>
-              <div className="d-flex justify-content-between fruite-name">
-                <a className="style-name mt-2 mp-2">
-                  <RiTreeFill style={{ marginRight: '10px' }}  />Hạt giống
-                </a>
-              </div>
-            </li>
-
-            <li>
-              <div className="d-flex justify-content-between fruite-name">
-                <a className="style-name mt-2 mp-2">
-                  <RiTreeFill style={{ marginRight: '10px' }}  />Chậu sứ
-                </a>
-              </div>
-            </li>
-
-            <li>
-              <div className="d-flex justify-content-between fruite-name">
-                <a className="style-name mt-2 mp-2">
-                  <RiTreeFill style={{ marginRight: '10px' }}  />Chậu đất nung
-                </a>
-              </div>
-            </li>
-
-            <li>
-              <div className="d-flex justify-content-between fruite-name">
-                <a className="style-name mt-2 mp-2">
-                  <RiTreeFill style={{ marginRight: '10px' }}  />Phụ kiện trang trí
-                </a>
-              </div>
-            </li>
           </ul>
 
           <div>
-                  <div className="mt-4">
-                    <h4><FaMoneyBillAlt style={{ marginRight: '10px', cursor: 'pointer' }}/>Giá</h4>
-                  </div>
-                  <div style={{ padding: '15px' }}>
-                    <p>Giá: {formatPrice(priceRange[0])} - {formatPrice(priceRange[1])} đ</p>
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                      {/* <FaMoneyBillWave size={20} style={{ marginRight: '10px' }} /> */}
-                      <Slider
-                        min={0}
-                        max={5000000}
-                        value={priceRange}
-                        onChange={handlePriceChange}
-                        range
-                        trackStyle={{ backgroundColor: '#9BCF53' }}
-                        handleStyle={[{ borderColor: '#9BCF53', backgroundColor: '#416D19' }, { borderColor: '#9BCF53', backgroundColor: '#416D19' }]}
-                      />
-                    </div>
-                  </div>
-                </div>
+            <div className="mt-4">
+              <h4><FaMoneyBillAlt style={{ marginRight: '10px', cursor: 'pointer' }} />Giá</h4>
+            </div>
+            <div style={{ padding: '15px' }}>
+              <p>Giá: {formatPrice(priceRange[0])} - {formatPrice(priceRange[1])} đ</p>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                {/* <FaMoneyBillWave size={20} style={{ marginRight: '10px' }} /> */}
+                <Slider
+                  min={0}
+                  max={5000000}
+                  value={priceRange}
+                  onChange={handlePriceChange}
+                  range
+                  trackStyle={{ backgroundColor: '#9BCF53' }}
+                  handleStyle={[{ borderColor: '#9BCF53', backgroundColor: '#416D19' }, { borderColor: '#9BCF53', backgroundColor: '#416D19' }]}
+                />
+              </div>
+            </div>
+          </div>
         </>
       ) : (
         <IoFilterCircle
@@ -148,7 +98,7 @@ const FilterSelect = ({setFilterList}) => {
 
 
     </div>
-    );
+  );
 };
 
 export default FilterSelect;
