@@ -33,9 +33,9 @@ const Shop = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/api/products');
+        const response = await axios.get('/api/products');
         const productsWithImages = await Promise.all(response.data.map(async (product) => {
-          const imageResponse = await axios.get(`http://localhost:8080/api/imgProducts/${product.id}`);
+          const imageResponse = await axios.get(`/api/imgProducts/${product.id}`);
           // console.log(imageResponse.data); 
           // console.log(imageResponse.data[0].imgPath); 
           return { ...product, imageUrl : imageResponse.data[0].imgPath }; 

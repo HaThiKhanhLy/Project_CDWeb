@@ -23,12 +23,14 @@ const ProductCard = ({ title, productItem }) => {
   const handleMouseEnter = (event) => {
     event.target.classList.add('hovered');
   };
-
+  const handleProductClick = () => {
+    router(`/shop/${productItem.id}`); 
+  };
   const handleMouseLeave = (event) => {
     event.target.classList.remove('hovered');
   };
   return (
-    <Col md={3} sm={5} xs={10} className="product mtop">
+    <Col md={3} sm={5} xs={10} className="product mtop" onClick={handleProductClick}>
       {title === "Sản phẩm giảm giá" ? (
         <span className="discount">{productItem.discount}% Off</span>
       ) : null}
