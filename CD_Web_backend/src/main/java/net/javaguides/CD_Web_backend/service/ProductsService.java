@@ -15,4 +15,5 @@ public interface ProductsService {
     ImgProductDto createImgProduct(ImgProductDto imgProductDto);
     List<ImgProductDto> getAllImageByProductID(Products productID);
 
+    ProductsDto getProductsById(Long id);
 }
