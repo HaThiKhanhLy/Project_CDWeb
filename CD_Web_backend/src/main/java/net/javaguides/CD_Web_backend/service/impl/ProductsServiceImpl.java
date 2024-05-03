@@ -15,6 +15,7 @@ import net.javaguides.CD_Web_backend.service.ProductsService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -64,5 +65,16 @@ public class ProductsServiceImpl implements ProductsService {
         return imgProducts.stream().map((imgProduct) -> ImgProductMapper.mapToImgProductDto(imgProduct))
                 .collect(Collectors.toList());
 
+    }
+
+    @Override
+    public ProductsDto getProductsById(Long id) {
+        Optional<Products> optionalProduct = productsRepository.findById(id);
+        if (optionalProduct.isPresent()) {
+            Products product = optionalProduct.get();
+            return ProductsMapper.maptoProductsDto(product);
+        } else {
+             throw new RuntimeException("No product found");
+        }
     }
 }

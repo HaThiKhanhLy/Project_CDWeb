@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect  } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
@@ -7,12 +7,18 @@ import "./product-details.css";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import { FaFacebook, FaFacebookMessenger  } from "react-icons/fa";
+import { useParams } from "react-router-dom";
+import axios from 'axios';
 
 const ProductDetails = ({ selectedProduct }) => {
+  
   const dispatch = useDispatch();
-  const [selectedImage, setSelectedImage] = useState(selectedProduct?.imgUrl);
-  console.log(selectedImage);
+
+
+ 
   const [quantity, setQuantity] = useState(1);
+  const [imgproduct, setImgProducts] = useState(null);
+  const [productImages, setProductImages] = useState([]);
 
   const handleQuantityChange = (e) => {
     setQuantity(e.target.value);
@@ -22,6 +28,43 @@ const ProductDetails = ({ selectedProduct }) => {
     dispatch(addToCart({ product: selectedProduct, num: quantity }));
     toast.success("Product has been added to cart!");
   };
+  useEffect(() => {
+    const fetchProductImage = async () => {
+      try {
+        if (selectedProduct) {
+          const imageResponse = await axios.get(`/api/imgProducts/${selectedProduct.id}`);
+          // Kiểm tra xem có hình ảnh được trả về không
+          if (imageResponse.data.length > 0) {
+            const productWithImage = { ...selectedProduct, imageUrl: imageResponse.data[0].imgPath };
+            setImgProducts(productWithImage);
+          } else {
+            // Nếu không có hình ảnh, bạn có thể xử lý tùy ý ở đây, ví dụ hiển thị một hình ảnh mặc định.
+            console.log("No image found for the selected product.");
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching product image:", error);
+      }
+    };
+    
+    fetchProductImage();
+  }, [selectedProduct]);
+  useEffect(() => {
+  const fetchProductImages = async () => {
+    try {
+      if (selectedProduct) {
+        const imageResponse = await axios.get(`/api/imgProducts/${selectedProduct.id}`);
+        setProductImages(imageResponse.data);
+      }
+    } catch (error) {
+      console.error("Error fetching product images:", error);
+    }
+  };
+  
+  fetchProductImages();
+}, [selectedProduct]);
+
+ 
 
   const responsive = {
     superLargeDesktop: {
@@ -42,70 +85,61 @@ const ProductDetails = ({ selectedProduct }) => {
     }
   };
 
-  const handleImageClick = (imageUrl) => {
-    setSelectedImage(imageUrl);
-  };
+
 
   return (
     <section className="product-page">
       <Container>
         <Row className="justify-content-center">
           <Col md={6}>
-            <img loading="lazy" src={selectedImage} alt="" />
+            <img loading="lazy" src={imgproduct?.imageUrl} alt="" />
             <Carousel
               responsive={responsive}
               // onClickItem={(index, item) =>
               //   handleImageClick(item.props.children.props.src)
               // }
             >
+              
               <div>
                 <img
                   style={{ height: "110px", objectFit: "cover", padding: "5px" }}
                   loading="lazy"
-                  src="https://i.pinimg.com/564x/35/80/4a/35804a948f16bdfd9479b24127ac2523.jpg"
+                  src={imgproduct?.imageUrl}
                   alt=""
-                  onClick={(index, item) =>
-                    handleImageClick("https://i.pinimg.com/564x/35/80/4a/35804a948f16bdfd9479b24127ac2523.jpg")
-                  }
+                 
                 />
               </div>
               <div>
                 <img
                   style={{ height: "110px", objectFit: "cover", padding: "5px" }}
                   loading="lazy"
-                  src="https://i.pinimg.com/564x/31/dd/df/31dddf77f596e5e0236076c2daa2d4e4.jpg"
+                  src={imgproduct?.imageUrl}
                   alt=""
-                  onClick={(index, item) =>
-                    handleImageClick("https://i.pinimg.com/564x/31/dd/df/31dddf77f596e5e0236076c2daa2d4e4.jpg")
-                  }
+                
                 />
               </div>
               <div>
                 <img
                   style={{ height: "110px", objectFit: "cover", padding: "5px" }}
                   loading="lazy"
-                  src="https://i.pinimg.com/564x/f6/6b/83/f66b836b41320d8941b59666b656c488.jpg"
+                  src={imgproduct?.imageUrl}
                   alt=""
-                  onClick={(index, item) =>
-                    handleImageClick("https://i.pinimg.com/564x/f6/6b/83/f66b836b41320d8941b59666b656c488.jpg")
-                  }
+                 
                 />
               </div>
               <div>
                 <img
                   style={{ height: "110px", objectFit: "cover", padding: "5px" }}
                   loading="lazy"
-                  src="https://i.pinimg.com/564x/f6/6b/83/f66b836b41320d8941b59666b656c488.jpg"
+                  src={imgproduct?.imageUrl}
                   alt=""
-                  onClick={(index, item) =>
-                    handleImageClick("https://i.pinimg.com/564x/f6/6b/83/f66b836b41320d8941b59666b656c488.jpg")
-                  }
+                  
                 />
               </div>
             </Carousel>
           </Col>
           <Col md={6}>
-            <h2>{selectedProduct?.productName}</h2>
+            <h2>{selectedProduct.productName}</h2>
             <div className="rate">
               <div className="stars">
                 <i className="fa fa-star"></i>
@@ -118,9 +152,9 @@ const ProductDetails = ({ selectedProduct }) => {
             </div>
             <div className="info">
               <span className="price">${selectedProduct?.price}</span>
-              <span>category: {selectedProduct?.category}</span>
+              <span>category: {selectedProduct?.category.name}</span>
             </div>
-            <p>{selectedProduct?.shortDesc}</p>
+            <p>{selectedProduct.detail}</p>
             <input
               className="qty-input"
               type="number"
