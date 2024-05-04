@@ -77,4 +77,10 @@ public class ProductsServiceImpl implements ProductsService {
              throw new RuntimeException("No product found");
         }
     }
+
+    @Override
+    public List<ProductsDto> getAllProductsByName(String productName) {
+        List<Products> products = productsRepository.findByName(productName);
+        return products.stream().map(ProductsMapper::maptoProductsDto).collect(Collectors.toList());
+    }
 }

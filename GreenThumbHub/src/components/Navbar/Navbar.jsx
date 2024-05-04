@@ -11,6 +11,7 @@ const NavBar = () => {
   const { cartList } = useSelector((state) => state.cart);
   const [expand, setExpand] = useState(false);
   const [isFixed, setIsFixed] = useState(false);
+  const [filterList, setFilterList] = useState([]);
   // fixed Header
   function scrollHandler() {
     if (window.scrollY >= 100) {
@@ -136,7 +137,7 @@ const NavBar = () => {
           </Navbar.Collapse>
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="justify-content-end flex-grow-1 pe-3">
-              <SearchBar />
+              {/* <SearchBar setFilterList={setFilterList} /> */}
               <Nav.Item className="expanded-cart">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

@@ -33,5 +33,13 @@ public class ProductsController {
         ProductsDto product =productsService.getProductsById(id);
         return  ResponseEntity.ok(product);
     }
+    @GetMapping("/search")
+    public ResponseEntity<List<ProductsDto>> searchProductsByName(@RequestParam String productName) {
+        List<ProductsDto> products = productsService.getAllProductsByName(productName);
+        return ResponseEntity.ok(products);
+    }
+
+
 }
+
 

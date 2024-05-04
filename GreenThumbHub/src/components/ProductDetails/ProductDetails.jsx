@@ -148,11 +148,11 @@ const ProductDetails = ({ selectedProduct }) => {
                 <i className="fa fa-star"></i>
                 <i className="fa fa-star"></i>
               </div>
-              <span>{selectedProduct?.avgRating} ratings</span>
+              <span>Đánh giá: {selectedProduct?.avgRating} </span>
             </div>
             <div className="info">
               <span className="price">${selectedProduct?.price}</span>
-              <span>category: {selectedProduct?.category.name}</span>
+              <span>Loại: {selectedProduct?.category.name}</span>
             </div>
             <p>{selectedProduct.detail}</p>
             <input

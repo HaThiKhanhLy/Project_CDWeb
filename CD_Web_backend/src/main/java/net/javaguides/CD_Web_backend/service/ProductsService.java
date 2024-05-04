@@ -16,4 +16,6 @@ public interface ProductsService {
     List<ImgProductDto> getAllImageByProductID(Products productID);
 
     ProductsDto getProductsById(Long id);
+
+    List<ProductsDto> getAllProductsByName(String productName);
 }
