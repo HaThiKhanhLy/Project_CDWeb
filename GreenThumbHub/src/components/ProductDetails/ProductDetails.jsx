@@ -13,34 +13,20 @@ import axios from 'axios';
 const ProductDetails = ({ selectedProduct }) => {
   
   const dispatch = useDispatch();
-
-
  
   const [quantity, setQuantity] = useState(1);
-  const [imgproduct, setImgProducts] = useState(null);
+
   const [productImages, setProductImages] = useState([]);
+  const [selectedImage, setSelectedImage] = useState('');
 
-  const handleQuantityChange = (e) => {
-    setQuantity(e.target.value);
-  };
-
-  const handelAdd = (selectedProduct, quantity) => {
-    dispatch(addToCart({ product: selectedProduct, num: quantity }));
-    toast.success("Product has been added to cart!");
-  };
   useEffect(() => {
     const fetchProductImage = async () => {
       try {
         if (selectedProduct) {
           const imageResponse = await axios.get(`/api/imgProducts/${selectedProduct.id}`);
-          // Kiểm tra xem có hình ảnh được trả về không
-          if (imageResponse.data.length > 0) {
-            const productWithImage = { ...selectedProduct, imageUrl: imageResponse.data[0].imgPath };
-            setImgProducts(productWithImage);
-          } else {
-            // Nếu không có hình ảnh, bạn có thể xử lý tùy ý ở đây, ví dụ hiển thị một hình ảnh mặc định.
-            console.log("No image found for the selected product.");
-          }
+          console.log(imageResponse.data);
+          setProductImages(imageResponse.data);
+          setSelectedImage(imageResponse.data[0].imgPath);
         }
       } catch (error) {
         console.error("Error fetching product image:", error);
@@ -49,22 +35,6 @@ const ProductDetails = ({ selectedProduct }) => {
     
     fetchProductImage();
   }, [selectedProduct]);
-  useEffect(() => {
-  const fetchProductImages = async () => {
-    try {
-      if (selectedProduct) {
-        const imageResponse = await axios.get(`/api/imgProducts/${selectedProduct.id}`);
-        setProductImages(imageResponse.data);
-      }
-    } catch (error) {
-      console.error("Error fetching product images:", error);
-    }
-  };
-  
-  fetchProductImages();
-}, [selectedProduct]);
-
- 
 
   const responsive = {
     superLargeDesktop: {
@@ -84,7 +54,9 @@ const ProductDetails = ({ selectedProduct }) => {
       items: 1
     }
   };
-
+  const handleImageClick = (imageUrl) => {
+    setSelectedImage(imageUrl);
+  };
 
 
   return (
@@ -92,50 +64,26 @@ const ProductDetails = ({ selectedProduct }) => {
       <Container>
         <Row className="justify-content-center">
           <Col md={6}>
-            <img loading="lazy" src={imgproduct?.imageUrl} alt="" />
-            <Carousel
+           
+            <img loading="lazy" src={selectedImage} alt="" />
+           
+              <Carousel
               responsive={responsive}
-              // onClickItem={(index, item) =>
-              //   handleImageClick(item.props.children.props.src)
-              // }
             >
-              
-              <div>
+              {productImages?.map((productImage) => (
+                 <div key={productImage.id}>
                 <img
                   style={{ height: "110px", objectFit: "cover", padding: "5px" }}
                   loading="lazy"
-                  src={imgproduct?.imageUrl}
+                  src={productImage?.imgPath}
                   alt=""
-                 
+                  onClick={(index, item) =>
+                    handleImageClick(productImage?.imgPath)
+                  }
                 />
-              </div>
-              <div>
-                <img
-                  style={{ height: "110px", objectFit: "cover", padding: "5px" }}
-                  loading="lazy"
-                  src={imgproduct?.imageUrl}
-                  alt=""
-                
-                />
-              </div>
-              <div>
-                <img
-                  style={{ height: "110px", objectFit: "cover", padding: "5px" }}
-                  loading="lazy"
-                  src={imgproduct?.imageUrl}
-                  alt=""
-                 
-                />
-              </div>
-              <div>
-                <img
-                  style={{ height: "110px", objectFit: "cover", padding: "5px" }}
-                  loading="lazy"
-                  src={imgproduct?.imageUrl}
-                  alt=""
-                  
-                />
-              </div>
+              </div> 
+              ))} 
+            
             </Carousel>
           </Col>
           <Col md={6}>
@@ -148,11 +96,13 @@ const ProductDetails = ({ selectedProduct }) => {
                 <i className="fa fa-star"></i>
                 <i className="fa fa-star"></i>
               </div>
-              <span>Đánh giá: {selectedProduct?.avgRating} </span>
+              <span>{selectedProduct?.avgRating} ratings</span>
             </div>
             <div className="info">
               <span className="price">${selectedProduct?.price}</span>
+
               <span>Danh mục: {selectedProduct?.category.name}</span>
+
             </div>
             <p>{selectedProduct.detail}</p>
             <input
@@ -160,13 +110,13 @@ const ProductDetails = ({ selectedProduct }) => {
               type="number"
               placeholder="Qty"
               value={quantity}
-              onChange={handleQuantityChange}
+             
             />
             <button
               aria-label="Add"
               type="submit"
               className="add"
-              onClick={() => handelAdd(selectedProduct, quantity)}
+            
             >
               Thêm vào giỏ hàng
             </button>

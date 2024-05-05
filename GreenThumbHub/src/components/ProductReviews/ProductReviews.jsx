@@ -10,28 +10,28 @@ const ProductReviews = ({ selectedProduct }) => {
         <ul>
           <li
             style={{ color: listSelected === "desc" ? "black" : "#9c9b9b" }}
-            onClick={() => setListSelected("desc")}
+            onClick={() => setListSelected("detail")}
           >
-            Description
+            Chi tiết sản phẩm
           </li>
           <li
             style={{ color: listSelected === "rev" ? "black" : "#9c9b9b" }}
             onClick={() => setListSelected("rev")}
           >
-            Reviews ({selectedProduct?.reviews.length})
+            Đánh giá(2)
           </li>
         </ul>
-        {listSelected === "desc" ? (
-          <p>{selectedProduct?.description}</p>
+        {listSelected === "detail" ? (
+          <p>{selectedProduct.detail}</p>
         ) : (
           <div className="rates">
-            {selectedProduct?.reviews.map((rate) => (
-              <div className="rate-comment" key={rate.rating}>
+            
+              <div className="rate-comment" >
                 <span>Jhon Doe</span>
-                <span>{rate.rating} (rating)</span>
-                <p>{rate.text}</p>
+                <span>5 (rating)</span>
+                <p>cây đẹp lắm nha mn</p>
               </div>
-            ))}
+            
           </div>
         )}
       </Container>
