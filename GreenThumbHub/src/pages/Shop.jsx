@@ -10,9 +10,11 @@ import SearchBar from "../components/SeachBar/SearchBar";
 const Shop = () => {
   const [products, setProducts] = useState([]);
   const [category, setCategory] = useState([]);
-  const [filteredProducts, setFilteredProducts] = useState([]); // Thay đổi ở đây
+  const [searchProducts, setSearchProducts] = useState([]);
+  const [selectedCategoryId, setSelectedCategoryId] = useState(null);
   const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth <= 1000);
-  const [filterList, setFilterList] = useState([]);
+  const [filterProducts, setFilteredProducts] = useState([]);
+  const [noResults, setNoResults] = useState(true);
   useWindowScrollToTop();
 
   useEffect(() => {
@@ -31,11 +33,7 @@ const Shop = () => {
     const fetchProducts = async () => {
       try {
         const response = await axios.get('/api/products');
-        const productsWithImages = await Promise.all(response.data.map(async (product) => {
-          const imageResponse = await axios.get(`/api/imgProducts/${product.id}`);
-          return { ...product, imageUrl : imageResponse.data[0].imgPath }; 
-        }));
-        setProducts(productsWithImages);
+        setProducts(response.data);
       } catch (error) {
         console.error(error);
       }
@@ -55,8 +53,59 @@ const Shop = () => {
     fetchCategory();
   }, []);
 
-  const handleFilterList = (filteredProducts) => {
-    setFilteredProducts(filteredProducts);
+useEffect(() => {
+  const fetchProductsByCategory = async () => {
+    try {
+      if (selectedCategoryId !== null) {
+        const response = await axios.get(`http://localhost:8080/api/products/category/${selectedCategoryId}`);
+        const products = response.data;
+        if (products.length === 0) {
+          setNoResults(true); // Không có sản phẩm, hiển thị thông báo
+          setFilteredProducts([]); // Đặt danh sách sản phẩm đã lọc thành rỗng
+        } else {
+          // Duyệt qua từng sản phẩm và gọi API để lấy ảnh
+          const productsWithImages = await Promise.all(products.map(async (product) => {
+            try {
+              const imageResponse = await axios.get(`/api/imgProducts/${product.id}`);
+              const imageUrl = imageResponse.data[0].imgPath;
+              // Thêm thông tin ảnh vào mỗi sản phẩm
+              return { ...product, imageUrl };
+            } catch (error) {
+              console.error("Error fetching image for product:", product.id, error);
+              // Nếu không thể lấy được ảnh, trả về sản phẩm không có ảnh
+              return { ...product, imageUrl: null };
+            }
+          }));
+  
+          // Cập nhật danh sách sản phẩm đã được lọc và có thông tin ảnh
+          setFilteredProducts(productsWithImages);
+          setNoResults(false); // Có sản phẩm, không hiển thị thông báo
+        }
+      }else {
+        // Nếu không có danh mục được chọn, đặt danh sách sản phẩm đã lọc về rỗng
+        setFilteredProducts([]);
+        setNoResults(true);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  fetchProductsByCategory();
+}, [selectedCategoryId, setFilteredProducts,setNoResults]);
+
+  
+
+  const handleFilterList = (searchProducts) => {
+    setSearchProducts(searchProducts);
+    setNoResults(searchProducts.length === 0);
+  };
+
+  const handleSelectCategory = (id) => {
+    setSelectedCategoryId(id);
+  };
+  const handleClearFilter = () => {
+    setSelectedCategoryId(null); // Xóa bộ lọc danh mục trong Shop
   };
 
   return (
@@ -75,14 +124,19 @@ const Shop = () => {
               <Row className="justify-content-center">
                 <Col>
                   <div>
-                    <FilterSelect categorys={category} />
+                    <FilterSelect categorys={category} onSelectCategory={handleSelectCategory} onClearFilter={handleClearFilter} />
                   </div>
                 </Col>
               </Row>
               <Row className="justify-content-center">
                 <Col>
-                  <div>
-                    <ShopList productItems={filteredProducts.length > 0 ? filteredProducts : products} />
+                  <div style={{ textAlign: "center" }}>
+                    {noResults && ( // Kiểm tra nếu không có kết quả tìm kiếm
+                      <p style={{marginTop:100}}><strong>Không tìm thấy sản phẩm</strong></p>
+                    )}
+                    {!noResults && (
+                      <ShopList productItems={(searchProducts.length > 0 && filterProducts.length === 0) ? searchProducts : filterProducts.length > 0 ? filterProducts : products} />
+                    )}
                   </div>
                 </Col>
               </Row>
@@ -91,12 +145,17 @@ const Shop = () => {
             <Row className="justify-content-center">
               <Col md={3}>
                 <div>
-                  <FilterSelect categorys={category} />
+                  <FilterSelect categorys={category} onSelectCategory={handleSelectCategory} onClearFilter={handleClearFilter}/>
                 </div>
               </Col>
               <Col md={9}>
-                <div>
-                  <ShopList productItems={filteredProducts.length > 0 ? filteredProducts : products} /> {/* Sử dụng filteredProducts thay vì products */}
+                <div style={{ textAlign: "center" }}>
+                  {noResults && ( // Kiểm tra nếu không có kết quả tìm kiếm
+                    <p><strong>Không tìm thấy sản phẩm</strong></p>
+                  )}
+                  {!noResults && (
+                    <ShopList productItems={(searchProducts.length > 0 && filterProducts.length === 0) ? searchProducts : filterProducts.length > 0 ? filterProducts : products} />
+                  )}
                 </div>
               </Col>
             </Row>
