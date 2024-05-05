@@ -83,4 +83,10 @@ public class ProductsServiceImpl implements ProductsService {
         List<Products> products = productsRepository.findByName(productName);
         return products.stream().map(ProductsMapper::maptoProductsDto).collect(Collectors.toList());
     }
+
+    @Override
+    public List<ProductsDto> getAllProductsByCategory(Long idCategory) {
+        List<Products> products = productsRepository.findByCategory(idCategory);
+        return products.stream().map(ProductsMapper::maptoProductsDto).collect(Collectors.toList());
+    }
 }

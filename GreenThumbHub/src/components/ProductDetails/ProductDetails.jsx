@@ -100,7 +100,9 @@ const ProductDetails = ({ selectedProduct }) => {
             </div>
             <div className="info">
               <span className="price">${selectedProduct?.price}</span>
-              <span>category: {selectedProduct?.category.name}</span>
+
+              <span>Danh mục: {selectedProduct?.category.name}</span>
+
             </div>
             <p>{selectedProduct.detail}</p>
             <input
