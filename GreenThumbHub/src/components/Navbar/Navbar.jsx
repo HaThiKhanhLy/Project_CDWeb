@@ -6,8 +6,11 @@ import { useSelector } from "react-redux";
 import logo from "../../Images/green.png";
 import SearchBar from "../SeachBar/SearchBar";
 import { FaSearch } from "react-icons/fa";
+import Dropdown from 'react-bootstrap/Dropdown';
 
 const NavBar = () => {
+
+  const userData = JSON.parse(localStorage.getItem('userData'));
   const { cartList } = useSelector((state) => state.cart);
   const [expand, setExpand] = useState(false);
   const [isFixed, setIsFixed] = useState(false);
@@ -22,7 +25,14 @@ const NavBar = () => {
   }
   window.addEventListener("scroll", scrollHandler);
 
-  
+  const handleLogout = () => {
+    
+    localStorage.removeItem('userData');
+ 
+    window.location.href = '/';
+  };
+
+
 
   return (
     <>
@@ -49,6 +59,7 @@ const NavBar = () => {
                 <FaSearch
                   className="nav-icon" style={{ color: 'black' }} />
               </Link>
+
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -139,7 +150,7 @@ const NavBar = () => {
             <Nav className="justify-content-end flex-grow-1 pe-3">
               {/* <SearchBar setFilterList={setFilterList} /> */}
               <Nav.Item className="expanded-cart">
-                <svg
+                {/* <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   fill="black"
@@ -150,7 +161,58 @@ const NavBar = () => {
                     d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z"
                     clipRule="evenodd"
                   />
-                </svg>
+                </svg> */}
+                {userData ? (
+                  <Dropdown>
+                  <Dropdown.Toggle style={{ border: "none", background: "transparent", padding: 0, color: 'black' }} >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="black"
+                      className="nav-icon"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z"
+                        clipRule="evenodd"
+                      />
+                    </svg> {userData.userName}
+                  </Dropdown.Toggle>
+
+
+                  <Dropdown.Menu>
+                    <Dropdown.Item as={Link} to="/login">Thông tin tài khoản</Dropdown.Item>
+                    <Dropdown.Item onClick={handleLogout}>Đăng xuất</Dropdown.Item>
+
+                  </Dropdown.Menu>
+                </Dropdown> 
+                ) : (
+                  <Dropdown>
+                  <Dropdown.Toggle style={{ border: "none", background: "transparent", padding: 0 ,  color: 'black'}}>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="black"
+                      className="nav-icon"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z"
+                        clipRule="evenodd"
+                      />
+                    </svg> Đăng nhập
+                  </Dropdown.Toggle>
+
+
+                  <Dropdown.Menu>
+                    <Dropdown.Item as={Link} to="/login">Đăng nhập</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/signup">Đăng ký</Dropdown.Item>
+
+                  </Dropdown.Menu>
+                </Dropdown> 
+                )}
+               
+
                 <Link
                   aria-label="Go to Cart Page"
                   to="/cart"
