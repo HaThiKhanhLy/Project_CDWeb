@@ -1,23 +1,20 @@
+import React, { useState, useEffect, Fragment } from "react";
 import { Col, Container, Row } from "react-bootstrap";
-import FilterSelect from "../components/FilterSelect/FilterSelect";
-import SearchBar from "../components/SeachBar/SearchBar";
-import { Fragment} from "react";
-import { products } from "../utils/products";
-import ShopList from "../components/ShopList";
-import Banner from "../components/Banner/Banner";
-import useWindowScrollToTop from "../hooks/useWindowScrollToTop";
-import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import ProductCatalog from '../components/FilterSelect/ProductCatalog';
+import Banner from "../components/Banner/Banner";
+import FilterSelect from "../components/FilterSelect/FilterSelect";
+import ShopList from "../components/ShopList";
+import useWindowScrollToTop from "../hooks/useWindowScrollToTop";
+import SearchBar from "../components/SeachBar/SearchBar";
 
 const Shop = () => {
   const [products, setProducts] = useState([]);
   const [category, setCategory] = useState([]);
-  const [filterList, setFilterList] = useState(
-    products.filter((item) => item.category === "sofa")
-  );
-  useWindowScrollToTop();
+  const [filteredProducts, setFilteredProducts] = useState([]); // Thay đổi ở đây
   const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth <= 1000);
+  const [filterList, setFilterList] = useState([]);
+  useWindowScrollToTop();
+
   useEffect(() => {
     const handleWindowResize = () => {
       setIsSmallScreen(window.innerWidth <= 1000);
@@ -36,12 +33,9 @@ const Shop = () => {
         const response = await axios.get('/api/products');
         const productsWithImages = await Promise.all(response.data.map(async (product) => {
           const imageResponse = await axios.get(`/api/imgProducts/${product.id}`);
-          // console.log(imageResponse.data); 
-          // console.log(imageResponse.data[0].imgPath); 
           return { ...product, imageUrl : imageResponse.data[0].imgPath }; 
         }));
         setProducts(productsWithImages);
-        // console.log(productsWithImages);
       } catch (error) {
         console.error(error);
       }
@@ -53,42 +47,42 @@ const Shop = () => {
       try {
         const response = await axios.get('http://localhost:8080/api/category');
         setCategory(response.data);
-        console.log(response.data);
       } catch (error) {
-        // console.error(error);
+        console.error(error);
       }
     };
 
     fetchCategory();
-
   }, []);
- 
- 
-  
+
+  const handleFilterList = (filteredProducts) => {
+    setFilteredProducts(filteredProducts);
+  };
+
   return (
     <Fragment>
       <Banner title="Sản phẩm" />
       
       <section className="filter-bar">
-        {/* <Container className="filter-bar-contianer"> */}
         <Container>
-         
-            {isSmallScreen ? (
+          <Row className="justify-content-center my-4">
+            <Col>
+              <SearchBar setFilterList={handleFilterList} />
+            </Col>
+          </Row>
+          {isSmallScreen ? (
             <>
               <Row className="justify-content-center">
                 <Col>
-                  <div >
-
-                  <FilterSelect categorys={category} />
-                
+                  <div>
+                    <FilterSelect categorys={category} />
                   </div>
                 </Col>
               </Row>
               <Row className="justify-content-center">
-                <Col >
+                <Col>
                   <div>
-
-                  <ShopList productItems={products} />
+                    <ShopList productItems={filteredProducts.length > 0 ? filteredProducts : products} />
                   </div>
                 </Col>
               </Row>
@@ -96,24 +90,18 @@ const Shop = () => {
           ) : (
             <Row className="justify-content-center">
               <Col md={3}>
-                <div >
-                <FilterSelect categorys={category} />
-               
+                <div>
+                  <FilterSelect categorys={category} />
                 </div>
               </Col>
               <Col md={9}>
-                <div >
-                <ShopList productItems={products} />
-               
+                <div>
+                  <ShopList productItems={filteredProducts.length > 0 ? filteredProducts : products} /> {/* Sử dụng filteredProducts thay vì products */}
                 </div>
               </Col>
             </Row>
           )}
         </Container>
-        {/* <Container>
-          <ShopList productItems={filterList} />
-        </Container> */}
-         
       </section>
     </Fragment>
   );
