@@ -9,24 +9,19 @@ import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import { FaMoneyBillAlt } from "react-icons/fa";
 
-
-
-const FilterSelect = ({ categorys }) => {
+const FilterSelect = ({ categorys, onSelectCategory,onClearFilter  }) => {
 
   const [showCategories, setShowCategories] = useState(true);
+  const [selectedCategory, setSelectedCategory] = useState(null); // State để theo dõi category được chọn
   const [priceRange, setLocalPriceRange] = useState([0, 5000000]);
+
   const handlePriceChange = (value) => {
     setLocalPriceRange(value);
-    // setPriceRange(value); // Truyền giá trị mới của thanh trượt giá lên component cha
   };
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth < 1000) {
-        setShowCategories(false);
-      } else {
-        setShowCategories(true);
-      }
+      setShowCategories(window.innerWidth >= 1000);
     };
 
     handleResize();
@@ -40,16 +35,26 @@ const FilterSelect = ({ categorys }) => {
     setShowCategories(!showCategories);
   };
 
-  
-
-
   const formatPrice = (price) => {
     return numeral(price).format('0,0');
   };
 
+  const handleCategorySelect = (category) => {
+    setSelectedCategory(category.id); // Cập nhật category được chọn
+    if (onSelectCategory) {
+      onSelectCategory(category.id);
+    }
+  };
+
+  const clearFilter = () => {
+    setSelectedCategory(null); // Xóa bộ lọc danh mục
+    if (onClearFilter) {
+      onClearFilter(); // Thông báo khi nút "Xóa lọc" được nhấn
+    }
+  };
+  
 
   return (
-
     <div className="mb-3 mt-4">
       {showCategories ? (
         <>
@@ -57,17 +62,14 @@ const FilterSelect = ({ categorys }) => {
           <ul className="list-unstyled fruite-categorie">
             {categorys && categorys.map((category) => (
               <li key={category.id}>
-                <div className="d-flex justify-content-between fruite-name">
-                  <a className="style-name mt-2 mp-2">
+                <div className={`d-flex justify-content-between fruite-name ${selectedCategory === category.id ? 'selected' : ''}`}>
+                  <a className="style-name mt-2 mp-2" onClick={() => handleCategorySelect(category)}>
                     <RiTreeFill style={{ marginRight: '10px' }} />{category.name}
                   </a>
                 </div>
               </li>
             ))}
-
-
           </ul>
-
           <div>
             <div className="mt-4">
               <h4><FaMoneyBillAlt style={{ marginRight: '10px', cursor: 'pointer' }} />Giá</h4>
@@ -75,7 +77,6 @@ const FilterSelect = ({ categorys }) => {
             <div style={{ padding: '15px' }}>
               <p>Giá: {formatPrice(priceRange[0])} - {formatPrice(priceRange[1])} đ</p>
               <div style={{ display: 'flex', alignItems: 'center' }}>
-                {/* <FaMoneyBillWave size={20} style={{ marginRight: '10px' }} /> */}
                 <Slider
                   min={0}
                   max={5000000}
@@ -95,8 +96,9 @@ const FilterSelect = ({ categorys }) => {
           onClick={toggleCategories}
         />
       )}
-
-
+      {selectedCategory && (
+        <button style={{backgroundColor:'red',padding:10,borderRadius:10,color:'white'}} onClick={clearFilter}>Xóa lọc</button>
+      )}
     </div>
   );
 };

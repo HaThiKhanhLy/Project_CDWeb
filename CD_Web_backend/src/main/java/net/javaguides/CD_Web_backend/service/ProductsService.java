@@ -18,4 +18,6 @@ public interface ProductsService {
     ProductsDto getProductsById(Long id);
 
     List<ProductsDto> getAllProductsByName(String productName);
+
+    List<ProductsDto> getAllProductsByCategory(Long idCategory);
 }
