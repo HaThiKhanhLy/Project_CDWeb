@@ -5,13 +5,17 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { Provider } from "react-redux";
 import { store } from "./app/store";
+import { CartProvider } from "./pages/CartContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <Provider store={store}>
+    <CartProvider>
+      <Provider store={store}>
       <App />
     </Provider>
+    </CartProvider>
+    
   </React.StrictMode>
 );
 

@@ -6,31 +6,52 @@ import { useDispatch } from "react-redux";
 import { addToCart } from "../../app/features/cart/cartSlice";
 import numeral from 'numeral';
 import { useState } from "react";
+import axios from 'axios';
+import { useCart } from "../../pages/CartContext";
 
 const ProductCard = ({ title, productItem }) => {
+  const { fetchCartItemsCount } = useCart();
+  const userData = JSON.parse(localStorage.getItem('userData'));
   const price = productItem.price;
   const salePrice = price - (price * productItem.percentDiscount);
-  const dispatch = useDispatch();
+
   const router = useNavigate();
   const handelClick = () => {
     router(`/shop/${productItem.id}`);
   };
-  const handelAdd = (productItem) => {
-    dispatch(addToCart({ product: productItem, num: 1 }));
-    toast.success("Product has been added to cart!");
+
+  const addToCart = async () => {
+    if (!userData || !userData.id) {
+      // console.error('User data is missing or incomplete');
+      window.alert('Bạn hãy đăng nhập để tiếp tục mua sắm !!');
+      return;
+    }
+    try {
+      const response = await axios.post('/api/cart/add', {
+        user: {
+          id: userData.id
+        },
+        product: {
+          id: productItem.id
+        },
+        quantity: 1
+      });
+
+      if (response.status === 200) {
+
+        window.alert('Bạn đã thêm sản phẩm ' + productItem.productName + ' vào giỏ hàng thành công !!');
+        fetchCartItemsCount();
+      }
+    } catch (error) {
+      console.error('Error adding product to cart:', error);
+    }
   };
 
-  const handleMouseEnter = (event) => {
-    event.target.classList.add('hovered');
-  };
-  const handleProductClick = () => {
-    router(`/shop/${productItem.id}`); 
-  };
-  const handleMouseLeave = (event) => {
-    event.target.classList.remove('hovered');
-  };
+
+
+
   return (
-    <Col md={3} sm={5} xs={10} className="product mtop" onClick={handleProductClick}>
+    <Col md={3} sm={5} xs={10} className="product mtop" >
       {title === "Sản phẩm giảm giá" ? (
         <span className="discount">{productItem.discount}% Off</span>
       ) : null}
@@ -58,7 +79,8 @@ const ProductCard = ({ title, productItem }) => {
             aria-label="Add"
             type="submit"
             className="add"
-            onClick={() => handelAdd(productItem)}
+            onClick={addToCart}
+            title="Thêm vào giỏ hàng"
           >
             <ion-icon name="add"></ion-icon>
 

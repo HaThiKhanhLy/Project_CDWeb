@@ -9,15 +9,19 @@ import "react-multi-carousel/lib/styles.css";
 import { FaFacebook, FaFacebookMessenger  } from "react-icons/fa";
 import { useParams } from "react-router-dom";
 import axios from 'axios';
+import { useCart } from "../../pages/CartContext";
+
 
 const ProductDetails = ({ selectedProduct }) => {
-  
-  const dispatch = useDispatch();
- 
+  const userData = JSON.parse(localStorage.getItem('userData'));
   const [quantity, setQuantity] = useState(1);
+  const handleQuantityChange = (e) => {
+    setQuantity(e.target.value);
+  };
 
   const [productImages, setProductImages] = useState([]);
   const [selectedImage, setSelectedImage] = useState('');
+  
 
   useEffect(() => {
     const fetchProductImage = async () => {
@@ -57,6 +61,37 @@ const ProductDetails = ({ selectedProduct }) => {
   const handleImageClick = (imageUrl) => {
     setSelectedImage(imageUrl);
   };
+  const { fetchCartItemsCount } = useCart();
+
+  const addToCart = async () => {
+    if (!userData || !userData.id) {
+      // console.error('User data is missing or incomplete');
+      window.alert('Bạn hãy đăng nhập để tiếp tục mua sắm !!');
+      return;
+    }
+    try {
+      const response = await axios.post('http://localhost:8080/api/cart/add', {
+        user: {
+          id: userData.id
+        },
+        product: {
+          id: selectedProduct.id
+        },
+        quantity: quantity
+      });
+
+      if (response.status === 200) {
+
+        window.alert('Bạn đã thêm sản phẩm ' + selectedProduct.productName + ' vào giỏ hàng thành công !!');
+        fetchCartItemsCount();
+       
+      }
+    } catch (error) {
+      console.error('Error adding product to cart:', error);
+    }
+  };
+
+
 
 
   return (
@@ -110,12 +145,14 @@ const ProductDetails = ({ selectedProduct }) => {
               type="number"
               placeholder="Qty"
               value={quantity}
+              onChange={handleQuantityChange}
              
             />
             <button
               aria-label="Add"
               type="submit"
               className="add"
+              onClick={addToCart}
             
             >
               Thêm vào giỏ hàng

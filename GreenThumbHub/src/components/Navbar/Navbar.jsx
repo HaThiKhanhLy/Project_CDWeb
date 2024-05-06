@@ -7,8 +7,10 @@ import logo from "../../Images/green.png";
 import SearchBar from "../SeachBar/SearchBar";
 import { FaSearch } from "react-icons/fa";
 import Dropdown from 'react-bootstrap/Dropdown';
+import { useCart } from "../../pages/CartContext";
 
 const NavBar = () => {
+  const { cartItemCount } = useCart();
 
   const userData = JSON.parse(localStorage.getItem('userData'));
   const { cartList } = useSelector((state) => state.cart);
@@ -217,7 +219,7 @@ const NavBar = () => {
                   aria-label="Go to Cart Page"
                   to="/cart"
                   className="cart"
-                  data-num="1"
+                  data-num={cartItemCount}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
