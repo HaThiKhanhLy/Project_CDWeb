@@ -9,6 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
+import Checkout from "./pages/Checkout";
 const Home = lazy(() => import("./pages/Home"));
 const Shop = lazy(() => import("./pages/Shop"));
 const Cart = lazy(() => import("./pages/Cart"));
@@ -36,6 +37,7 @@ function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/checkout" element={<Checkout />} />
         </Routes>
         <Footer />
       </Router>

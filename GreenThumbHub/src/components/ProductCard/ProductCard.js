@@ -13,7 +13,7 @@ const ProductCard = ({ title, productItem }) => {
   const { fetchCartItemsCount } = useCart();
   const userData = JSON.parse(localStorage.getItem('userData'));
   const price = productItem.price;
-  const salePrice = price - (price * productItem.percentDiscount);
+  const salePrice = price - (price * (productItem.percentDiscount/100));
 
   const router = useNavigate();
   const handelClick = () => {
@@ -53,7 +53,7 @@ const ProductCard = ({ title, productItem }) => {
   return (
     <Col md={3} sm={5} xs={10} className="product mtop" >
       {title === "Sản phẩm giảm giá" ? (
-        <span className="discount">{productItem.discount}% Off</span>
+        <span className="discount">{productItem.percentDiscount}% Off</span>
       ) : null}
       <img
         loading="lazy"
