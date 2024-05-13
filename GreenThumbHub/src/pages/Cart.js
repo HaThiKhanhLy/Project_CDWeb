@@ -9,8 +9,11 @@ import {
 import axios from "axios";
 import numeral from "numeral";
 import { useCart } from "./CartContext";
+import Button from 'react-bootstrap/Button';
+import { useNavigate } from 'react-router-dom';
 
 const Cart = () => {
+  const navigate = useNavigate();
   const userData = JSON.parse(localStorage.getItem('userData'));
 
   const [cartItems, setCartItems] = useState([]);
@@ -37,7 +40,7 @@ const Cart = () => {
       setCartItems(updatedCartItems);
       // Tính tổng giá trị trong giỏ hàng
       const total = updatedCartItems.reduce((acc, item) => {
-        const salePrice = item.product.price - (item.product.price * item.product.percentDiscount);
+        const salePrice = item.product.price - (item.product.price * (item.product.percentDiscount/100));
         return acc + (salePrice * item.quantity);
       }, 0);
       setTotalPrice(total);
@@ -68,7 +71,7 @@ const Cart = () => {
       console.log('Số lượng sản phẩm không thể nhỏ hơn 0');
       return;
     }
-  
+
     try {
       const response = await axios.post(`/api/cart/add`, {
         user: {
@@ -78,13 +81,13 @@ const Cart = () => {
           id: productId
         },
         quantity: newQuantity
-        
+
       });
-  
+
       if (response.status === 200) {
         console.log('Số lượng sản phẩm đã được cập nhật');
         fetchCartItems();
-         fetchCartItemsCount();
+        fetchCartItemsCount();
       }
     } catch (error) {
       console.error('Error updating cart item quantity:', error);
@@ -107,7 +110,7 @@ const Cart = () => {
 
 
             {cartItems.map((item) => {
-              const salePrice = item.product.price - (item.product.price * item.product.percentDiscount);
+              const salePrice = item.product.price - (item.product.price * (item.product.percentDiscount/100));
               const productQty = salePrice * item.quantity;
               return (
                 <div className="cart-list" key={item.id}>
@@ -127,14 +130,14 @@ const Cart = () => {
                         <Col xs={12} sm={3} className="cartControl">
                           <button
                             className="incCart"
-                            onClick={() => updateCartItemQuantity(item.product.id, 1 )}
+                            onClick={() => updateCartItemQuantity(item.product.id, 1)}
 
                           >
                             <i className="fa-solid fa-plus"></i>
                           </button>
                           <button
                             className="desCart"
-                            onClick={() => updateCartItemQuantity(item.product.id,-1, item.quantity)}
+                            onClick={() => updateCartItemQuantity(item.product.id, -1, item.quantity)}
 
                           >
                             <i className="fa-solid fa-minus"></i>
@@ -159,7 +162,14 @@ const Cart = () => {
               <div className=" d_flex">
                 <h4>Tổng giá :</h4>
                 <h3>{numeral(totalPrice).format('0,0')}đ</h3>
+
+
               </div>
+            </div>
+
+            <div className="mt-2 text-end" >
+              <Button variant="primary" style={{ fontSize: '25px', fontWeight: 'bold', backgroundColor: '#9BCF53', border: '1px solid #9BCF53' }}
+                onClick={() => navigate('/checkout')}>Thanh toán</Button>
             </div>
           </Col>
         </Row>
