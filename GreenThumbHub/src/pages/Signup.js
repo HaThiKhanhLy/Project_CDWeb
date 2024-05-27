@@ -85,7 +85,7 @@ const Signup = () => {
             <Row>
                 <Col xs={12} md={6}>
                     <Container className="d-flex justify-content-center align-items-center" style={{ minHeight: "100vh", maxWidth: "500px" }}>
-                        <Form style={{ width: "80%" }} onSubmit={handleSubmit} >
+                        <Form style={{ width: "80%" }} >
                             <h3 className='mb-4'>Đăng ký</h3>
 
                             <Form.Group className="mb-3 " >
@@ -118,7 +118,8 @@ const Signup = () => {
                                 <Form.Check type="checkbox" label="Đồng ý với điều khoản của chúng tôi" />
                             </Form.Group>
 
-                            <Button variant="primary" type="submit" style={{ backgroundImage: 'linear-gradient(310deg, rgb(155, 207, 83), rgb(65, 109, 25))', border: 'none', fontWeight: 'bold', width: "100%" }}  disabled={!isValidForm}>
+                            <Button variant="primary" style={{ backgroundImage: 'linear-gradient(310deg, rgb(155, 207, 83), rgb(65, 109, 25))', border: 'none', fontWeight: 'bold', width: "100%" }}  disabled={!isValidForm}
+                            onClick={handleSubmit}>
                                 Đăng ký
                             </Button>
 

@@ -80,5 +80,12 @@ public ResponseEntity<List<CartItem>> getCartItems(@PathVariable("id") Long user
         return ResponseEntity.ok("Product has been removed from the cart");
     }
 
+    @DeleteMapping("/clear/user/{userID}")
+    public ResponseEntity<String> clearCartByUserID(@PathVariable Long userID) {
+        // Xóa các mục trong giỏ hàng dựa trên user
+        cart.removeIf(cartItem -> cartItem.getUser().getId() != null && cartItem.getUser().getId().equals(userID));
+        return ResponseEntity.ok("Giỏ hàng của người dùng có ID " + userID + " đã được xóa");
+    }
+
 }
 
