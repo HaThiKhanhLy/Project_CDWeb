@@ -148,7 +148,7 @@ const Checkout = () => {
 
     const redirectToOrders = (id) => {
 
-        window.location.href = `/`;
+        window.location.href = `account/order/order-details/${id}`;
     };
 
 

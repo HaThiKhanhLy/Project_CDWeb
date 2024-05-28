@@ -78,7 +78,7 @@ const NavBar = () => {
                 aria-label="Go to Cart Page"
                 to="/cart"
                 className="cart"
-                data-num={cartList.length}
+                data-num={cartItemCount}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -183,7 +183,7 @@ const NavBar = () => {
 
 
                   <Dropdown.Menu>
-                    <Dropdown.Item as={Link} to="/login">Thông tin tài khoản</Dropdown.Item>
+                      <Dropdown.Item as={Link} to="/account">Thông tin tài khoản</Dropdown.Item>
                     <Dropdown.Item onClick={handleLogout}>Đăng xuất</Dropdown.Item>
 
                   </Dropdown.Menu>
