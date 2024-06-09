@@ -28,4 +28,14 @@ public class UsersServiceIpml implements UsersService{
         }
         return UsersMapper.mapToUsersDto(users);
     }
+    @Override
+    public boolean changePassword(String email, String oldPassword, String newPassword) {
+        Users users = usersRepository.findByEmailAndPassword(email, oldPassword);
+        if (users != null) {
+            users.setPassword(newPassword);
+            usersRepository.save(users);
+            return true;
+        }
+        return false;
+    }
 }
