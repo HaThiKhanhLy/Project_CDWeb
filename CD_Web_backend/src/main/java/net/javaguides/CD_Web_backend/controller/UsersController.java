@@ -3,6 +3,7 @@ package net.javaguides.CD_Web_backend.controller;
 
 import lombok.AllArgsConstructor;
 import net.javaguides.CD_Web_backend.dto.ChangePasswordRequest;
+import net.javaguides.CD_Web_backend.dto.ForgotPasswordRequest;
 import net.javaguides.CD_Web_backend.dto.LoginRequest;
 import net.javaguides.CD_Web_backend.dto.UsersDto;
 import net.javaguides.CD_Web_backend.service.UsersService;
@@ -47,7 +48,7 @@ public class UsersController {
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Email or password is incorrect");
         }
-    
+
     }
 
 
@@ -106,6 +107,21 @@ public class UsersController {
             return ResponseEntity.ok("Password changed successfully");
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Old password is incorrect");
+        }
+    }
+    @PutMapping("/forgot-password")
+    public ResponseEntity<?> forgotPassword(@RequestBody ForgotPasswordRequest forgotPasswordRequest) {
+        String email = forgotPasswordRequest.getEmail();
+        String newPassword = forgotPasswordRequest.getNewPassword();
+
+        String hashedNewPassword = sha256(newPassword);
+
+        boolean isPasswordUpdated = usersService.updatePasswordByEmail(email, hashedNewPassword);
+
+        if (isPasswordUpdated) {
+            return ResponseEntity.ok("Password updated successfully");
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to update password");
         }
     }
 

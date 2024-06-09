@@ -16,6 +16,7 @@ import { Info } from "./components/Account/Info";
 import OrderDetails from "./components/Account/OrderDetails";
 import ChangePassword from "./pages/ChangePassword";
 import ForgetPassword from "./pages/ForgetPassword";
+import NewPassword from "./pages/NewPassword";
 
 const Home = lazy(() => import("./pages/Home"));
 const Shop = lazy(() => import("./pages/Shop"));
@@ -47,13 +48,14 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/forgetPass" element={<ForgetPassword />} />
+          <Route path="/newPassword" element={<NewPassword />} />
           <Route path="/account" element={<Account />}>
             <Route index element={<Info />} /> 
              <Route path="order" element={<Order />} />
             <Route path="info" element={<Info />} />
             <Route path="order/order-details/:id" element={< OrderDetails />} />
             <Route path="changePassword" element={<ChangePassword />} />
-           
+            
           </Route>
          
 
