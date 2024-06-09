@@ -6,4 +6,5 @@ import net.javaguides.CD_Web_backend.entity.Users;
 public interface UsersService {
     UsersDto createUser(UsersDto usersDto);
     UsersDto getUserByEmailAndPassWord(String email, String password);
+    boolean changePassword(String email, String oldPassword, String newPassword);
 }

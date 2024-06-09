@@ -8,6 +8,7 @@ import "./style.css"
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import axios from 'axios';
+import { Link } from 'react-router-dom'
 
 
 const Login = () => {
@@ -59,7 +60,7 @@ const Login = () => {
                             
                             <Form.Group className="mb-3 mt-3 text-center" controlId="formBasicRegister">
                                 <p style={{ fontSize: '12px' }} className="text-default">
-                                    Quên mật khẩu? 
+                                     <Link to="/forgetPass" style={{ textDecoration: 'none' }}>Quên mật khẩu?</Link>
                                 </p>
 
                             </Form.Group>
@@ -71,7 +72,7 @@ const Login = () => {
 
                             <Form.Group className="mb-3 mt-3 text-center" controlId="formBasicRegister">
                                 <p style={{ fontSize: '12px' }} className="text-default">
-                                    Bạn chưa có tài khoản? <span className="text-hover" style={{color: '#416D19'}}>Đăng ký?</span>
+                                    Bạn chưa có tài khoản? <span className="text-hover" style={{color: '#416D19'}}><Link to="/signup" style={{ textDecoration: 'none' }}>Đăng ký?</Link></span>
                                 </p>
 
                             </Form.Group>

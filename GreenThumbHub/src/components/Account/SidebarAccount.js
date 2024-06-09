@@ -37,7 +37,8 @@ const items = [
 	{
 		key: '3',
 		icon: <ContainerOutlined />,
-		label: 'Đổi mật khẩu',
+		label: (
+			<Link to="changePassword" style={{ textDecoration: 'none' }}>Đổi mật khẩu</Link>),
 	},
 	{
 		key: '4',

@@ -2,6 +2,7 @@ package net.javaguides.CD_Web_backend.controller;
 
 
 import lombok.AllArgsConstructor;
+import net.javaguides.CD_Web_backend.dto.ChangePasswordRequest;
 import net.javaguides.CD_Web_backend.dto.LoginRequest;
 import net.javaguides.CD_Web_backend.dto.UsersDto;
 import net.javaguides.CD_Web_backend.service.UsersService;
@@ -46,7 +47,7 @@ public class UsersController {
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Email or password is incorrect");
         }
-
+    
     }
 
 
@@ -90,4 +91,23 @@ public class UsersController {
             return null;
         }
     }
+    @PutMapping("/change-password")
+    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest changePasswordRequest) {
+        String email = changePasswordRequest.getEmail();
+        String oldPassword = changePasswordRequest.getOldPassword();
+        String newPassword = changePasswordRequest.getNewPassword();
+
+        String hashedOldPassword = sha256(oldPassword);
+        String hashedNewPassword = sha256(newPassword);
+
+        boolean isPasswordChanged = usersService.changePassword(email, hashedOldPassword, hashedNewPassword);
+
+        if (isPasswordChanged) {
+            return ResponseEntity.ok("Password changed successfully");
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Old password is incorrect");
+        }
+    }
+
+
 }
