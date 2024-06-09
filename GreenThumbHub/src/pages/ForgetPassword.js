@@ -3,33 +3,54 @@ import { Container, Row, Col } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import axios from 'axios';
-import "./style.css";
+import emailjs from 'emailjs-com';
+import CryptoJS from 'crypto-js';
 
 const ForgotPass = () => {
     const [email, setEmail] = useState('');
     const [error, setError] = useState('');
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
+    const sendEmail = async (email) => {
         try {
-            // Gửi yêu cầu đổi mật khẩu
-            const response = await axios.put('http://localhost:8080/api/users/reset-password', {
-                email: email
-            });
+            // Mã hóa email
+            const encryptedEmail = CryptoJS.AES.encrypt(email, 'your-secret-key').toString();
 
-            console.log(response.data);
-            window.alert('Đã gửi yêu cầu đổi mật khẩu thành công');
-            // Điều hướng hoặc hiển thị thông báo khác tùy thuộc vào yêu cầu
+            const templateParams = {
+                to_email: email,
+                message: 'http://localhost:3000/newPassword?email=' + encodeURIComponent(encryptedEmail), // Đường dẫn đến trang đổi mật khẩu
+                from_name: '20130320@st.hcmuaf.edu.vn'
+            };
+
+            const response = await emailjs.send(
+                'service_2elt81z',
+                'template_hqi1z71',
+                templateParams,
+                'abTWnnSG9C8LlW3-A'
+            );
+
+            console.log('Email sent successfully:', response);
+            window.alert('Email sent successfully');
         } catch (error) {
-            console.error('Error requesting password reset:', error);
-            if (error.response && error.response.data) {
-                setError(error.response.data);
-            } else {
-                setError('Có lỗi xảy ra khi gửi yêu cầu đổi mật khẩu');
-            }
+            console.error('Error sending email:', error);
+            window.alert('Error sending email');
         }
     };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+    
+        try {
+            // Gửi email thông báo đặt lại mật khẩu
+            await sendEmail(email);
+            window.alert('Email sent successfully');
+            
+            // Điều hướng hoặc hiển thị thông báo khác tùy thuộc vào yêu cầu
+        } catch (error) {
+            console.error('Error sending email:', error);
+            window.alert('Error sending email');
+        }
+    };
+    
 
     return (
         <div>

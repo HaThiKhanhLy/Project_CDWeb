@@ -38,4 +38,14 @@ public class UsersServiceIpml implements UsersService{
         }
         return false;
     }
+    public boolean updatePasswordByEmail(String email, String hashedNewPassword) {
+        // Implement the actual database update logic
+        Users user = usersRepository.findByEmail(email);
+        if (user != null) {
+            user.setPassword(hashedNewPassword);
+            usersRepository.save(user);
+            return true;
+        }
+        return false;
+    }
 }

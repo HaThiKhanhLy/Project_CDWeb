@@ -7,4 +7,6 @@ public interface UsersService {
     UsersDto createUser(UsersDto usersDto);
     UsersDto getUserByEmailAndPassWord(String email, String password);
     boolean changePassword(String email, String oldPassword, String newPassword);
+
+    boolean updatePasswordByEmail(String email, String hashedNewPassword);
 }
