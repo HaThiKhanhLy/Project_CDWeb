@@ -15,6 +15,8 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
+import java.util.Map;
 
 @CrossOrigin("*")
 @AllArgsConstructor
@@ -40,6 +42,7 @@ public class UsersController {
     public ResponseEntity<?> login (@RequestBody LoginRequest loginRequest){
         String email = loginRequest.getEmail();
         String password = loginRequest.getPassword();
+
 
         String hashedPassword = sha256(password);
         UsersDto usersDto = usersService.getUserByEmailAndPassWord(email, hashedPassword);
@@ -122,6 +125,21 @@ public class UsersController {
             return ResponseEntity.ok("Password updated successfully");
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to update password");
+        }
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllUsers() {
+        List<UsersDto> allUsers = usersService.getAllUsers();
+        return ResponseEntity.ok(allUsers);
+    }
+    @PutMapping("/update-status/{id}")
+    public ResponseEntity<?> updateUserStatus(@PathVariable Long id, @RequestBody Map<String, Long> status) {
+        boolean isUpdated = usersService.updateUserStatus(id, status.get("status"));
+        if (isUpdated) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to update user status");
         }
     }
 

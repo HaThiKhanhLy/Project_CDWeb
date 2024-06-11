@@ -8,6 +8,9 @@ import net.javaguides.CD_Web_backend.repository.UsersRepository;
 import net.javaguides.CD_Web_backend.service.UsersService;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class UsersServiceIpml implements UsersService{
@@ -48,4 +51,26 @@ public class UsersServiceIpml implements UsersService{
         }
         return false;
     }
+    @Override
+    public List<UsersDto> getAllUsers() {
+        List<Users> usersList = usersRepository.findAll();
+        List<UsersDto> usersDtoList = new ArrayList<>();
+        for (Users user : usersList) {
+            usersDtoList.add(UsersMapper.mapToUsersDto(user));
+        }
+        return usersDtoList;
+    }
+
+    @Override
+    public boolean updateUserStatus(Long id, long newStatus) {
+        Users user = usersRepository.findById(id).orElse(null);
+        if (user != null) {
+            user.setStatus(newStatus);
+            usersRepository.save(user);
+            return true;
+        }
+        return false;
+    }
+
+
 }
