@@ -1,82 +1,112 @@
-import React from 'react'
-
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Container } from 'react-bootstrap';
 import Sidebar from "../../components/SideBar";
-
 import { Col, Row, Table, Button } from 'antd';
 
-
 const ListOrder = () => {
-    const dataSource = [
-        {
-            key: '1',
-            id: '1',
-            email: 'example1@example.com',
-            fullName: 'John Doe',
-            phoneNumber: '123456789',
-        },
-        {
-            key: '2',
-            id: '2',
-            email: 'example2@example.com',
-            fullName: 'Jane Doe',
-            phoneNumber: '987654321',
-        },
-        // Add more data as needed
-    ];
+    const [orders, setOrders] = useState([]);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        fetchOrders();
+    }, []);
+
+    const fetchOrders = async () => {
+        try {
+            const response = await fetch('/api/orders');
+            const data = await response.json();
+            setOrders(data);
+        } catch (error) {
+            console.error('Error fetching orders:', error);
+        }
+    };
+
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const day = date.getDate().toString().padStart(2, '0');
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const year = date.getFullYear();
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        const seconds = date.getSeconds().toString().padStart(2, '0');
+        return `${hours}:${minutes}:${seconds} ${day}/${month}/${year}`;
+    };
+
+    const handleOrderDetail = (orderId) => {
+        navigate(`/orderDetail/${orderId}`);
+    };
+
+    const getStatusColor = (statusName) => {
+        switch (statusName) {
+            case 'Chờ xác nhận':
+                return '#f7c308';
+            case 'Đang vận chuyển':
+                return '#0292fd';
+            case 'Nhận hàng thành công':
+                return '#13ec38';
+            case 'Đã hủy':
+                return 'red';
+            default:
+                return 'black';
+        }
+    };
 
     const columns = [
         {
-            title: 'Mã ID',
+            title: 'Mã đơn hàng',
             dataIndex: 'id',
             key: 'id',
+            render: (text, record) => <Button type="link" onClick={() => handleOrderDetail(record.id)}>{text}</Button>
         },
         {
-            title: 'Email',
-            dataIndex: 'email',
-            key: 'email',
+            title: 'Người đặt hàng',
+            dataIndex: 'orderName',
+            key: 'orderName',
         },
         {
-            title: 'Họ Tên',
-            dataIndex: 'fullName',
-            key: 'fullName',
+            title: 'Tổng đơn hàng',
+            dataIndex: 'totalPrice',
+            key: 'totalPrice',
         },
         {
-            title: 'Số điện thoại',
-            dataIndex: 'phoneNumber',
-            key: 'phoneNumber',
+            title: 'Thời gian đặt hàng',
+            dataIndex: 'createTime',
+            key: 'createTime',
+            render: (text) => formatDate(text),
         },
         {
-            title: 'Hành động',
-            key: 'action',
-            render: (text, record) => (
-                <span>
-                    <Button type="link" href={`/edit/${record.id}`}>Chỉnh sửa</Button>
-                    <Button type="link" danger style={{ marginLeft: 8 }}>Xóa</Button>
+            title: 'Trạng thái',
+            dataIndex: 'status',
+            key: 'status',
+            render: (status) => (
+                <span style={{ color: getStatusColor(status.statusName),fontWeight:'bolder'}}>
+                    {status.statusName}
                 </span>
             ),
         },
     ];
-	return (
-		<div>
-			<Row>
-        <Col xs={12} md={3} lg={2} xl={2} className="mb-4" >
-          <Sidebar />
-        </Col>
-        <Col
-                        xs={{ span: 24, order: 2 }}
-                        sm={{ span: 24, order: 2 }}
-                        md={{ span: 18, order: 1 }}
-                        lg={{ span: 18, order: 1 }}
-                        xl={{ span: 18, order: 1 }}
-                        style={{ backgroundColor: '#80808012' }}
-                        className='mt-4'
-                    >
-                        <Table dataSource={dataSource} columns={columns} />
-                    </Col>
-      </Row>
-		</div>
-	)
-}
 
-export default ListOrder
+    return (
+        <div>
+            <Row>
+                <Col lg={4} style={{ marginRight: 25 }}>
+                    <Sidebar />
+                </Col>
+                <Col
+                    xs={{ span: 24, order: 2 }}
+                    sm={{ span: 24, order: 2 }}
+                    md={{ span: 18, order: 1 }}
+                    lg={{ span: 18, order: 1 }}
+                    xl={{ span: 18, order: 1 }}
+                    style={{ backgroundColor: '#80808012' }}
+                    className='mt-4'
+                >
+                    <Table dataSource={orders} columns={columns} />
+                </Col>
+            </Row>
+        </div>
+    );
+};
+
+export default ListOrder;

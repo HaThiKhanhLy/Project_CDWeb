@@ -60,6 +60,13 @@ public class OrderDetailServiceImpl implements OrderDetailService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<OrderDetailDto> getOrderDetailsByOrderId(Orders orderId) {
+        List<OrderDetail> orderDetails = orderDetailRepository.findByOrderId(orderId);
+        return orderDetails.stream()
+                .map(OrderDetailMapper::mapToOrderDetailDto)
+                .collect(Collectors.toList());
+    }
 
 
     private boolean isUserIdMatchesOrder(Long userId, Orders orderId) {
@@ -77,4 +84,5 @@ public class OrderDetailServiceImpl implements OrderDetailService {
         return ProductsMapper.maptoProductsDto(updatedProduct);
 
     }
+
 }

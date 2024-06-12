@@ -1,7 +1,6 @@
 package net.javaguides.CD_Web_backend.service.impl;
 
 import lombok.AllArgsConstructor;
-import net.javaguides.CD_Web_backend.dto.OrderDetailDto;
 import net.javaguides.CD_Web_backend.dto.OrdersDto;
 import net.javaguides.CD_Web_backend.entity.*;
 import net.javaguides.CD_Web_backend.exception.ResourceNotFoundException;
@@ -11,6 +10,7 @@ import net.javaguides.CD_Web_backend.service.OrdersService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -71,4 +71,20 @@ public class OrdersServiceImpl implements OrdersService {
         Orders saveOrder = ordersRepository.save(orders);
         return OrdersMapper.mapToOrdersDto(saveOrder);
     }
+    @Override
+    public List<OrdersDto> getAllOrders() {
+        List<Orders> orders = ordersRepository.findAll();
+        return orders.stream()
+                .map(OrdersMapper::mapToOrdersDto)
+                .collect(Collectors.toList());
+    }
+    @Override
+    public Optional<OrdersDto> getOrderById(Long orderId) {
+        Optional<Orders> optionalOrder = ordersRepository.findById(orderId);
+        return optionalOrder.map(OrdersMapper::mapToOrdersDto);
+    }
+
+
+
+
 }

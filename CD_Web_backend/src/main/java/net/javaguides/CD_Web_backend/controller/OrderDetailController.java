@@ -29,4 +29,12 @@ public class OrderDetailController {
         List<OrderDetailDto> orderDetailDtos = orderDetailService.getAllOrderId(userId, orderId);
         return ResponseEntity.ok(orderDetailDtos);
     }
+    @GetMapping("/{orderId}")
+    public ResponseEntity<List<OrderDetailDto>> getOrderDetailsByOrderId(@PathVariable Orders orderId) {
+        List<OrderDetailDto> orderDetails = orderDetailService.getOrderDetailsByOrderId(orderId);
+        if (orderDetails.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(orderDetails);
+    }
 }
