@@ -22,6 +22,7 @@ import ListOrderAdmin from "./pages/Admin/ListOrderAdmin";
 import ListProductsAdmin from "./pages/Admin/ListProductsAdmin";
 import ListUserAdmin from "./pages/Admin/ListUserAdmin";
 import PrivateRoute from "./components/PrivateRoute"; // Import thành phần PrivateRoute
+import DetailOrderAdmin from './pages/Admin/DetailOrderAdmin';
 
 const Home = lazy(() => import("./pages/Home"));
 const Shop = lazy(() => import("./pages/Shop"));
@@ -54,7 +55,8 @@ const MainLayout = () => {
   const hideNavAndFooter = location.pathname === '/dashboard'|| 
   location.pathname === '/listOrderAdmin' || 
   location.pathname === '/listProductsAdmin' || 
-  location.pathname === '/listUserAdmin';
+  location.pathname === '/listUserAdmin' || 
+  location.pathname.startsWith('/orderDetail');
   return (
     <>
       {!hideNavAndFooter && <NavBar />}
@@ -99,6 +101,11 @@ const MainLayout = () => {
         <Route path="/listUserAdmin" element={
           <PrivateRoute>
             <ListUserAdmin />
+          </PrivateRoute>
+        } />
+        <Route path="/orderDetail/:id" element={
+          <PrivateRoute>
+            <DetailOrderAdmin />
           </PrivateRoute>
         } />
       </Routes>

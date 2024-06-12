@@ -81,16 +81,7 @@ const ListUser = () => {
             render: (text) => (text === 1 ? 'Khách hàng' : text === 2 ? 'Quản trị viên' : 'Unknown'),
 
         },
-        {
-            title: 'Hành động',
-            key: 'action',
-            render: (text, record) => (
-                <span>
-                    <Button type="link" href={`/edit/${record.id}`}>Chỉnh sửa</Button>
-                    <Button type="link" danger style={{ marginLeft: 8 }}>Xóa</Button>
-                </span>
-            ),
-        },
+        
     ];
 
     return (

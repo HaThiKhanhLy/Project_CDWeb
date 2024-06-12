@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin("*")
 @AllArgsConstructor
@@ -49,5 +50,19 @@ public class OrdersController {
             return "Unknown";
         }
     }
+    @GetMapping
+    public ResponseEntity<List<OrdersDto>> getAllOrders() {
+        List<OrdersDto> ordersDtos = ordersService.getAllOrders();
+        return ResponseEntity.ok(ordersDtos);
+    }
+    @GetMapping("/id={orderId}")
+    public ResponseEntity<OrdersDto> getOrderById(@PathVariable Long orderId) {
+        Optional<OrdersDto> orderDtoOptional = ordersService.getOrderById(orderId);
+        return orderDtoOptional.map(orderDto -> new ResponseEntity<>(orderDto, HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+
+
 
 }

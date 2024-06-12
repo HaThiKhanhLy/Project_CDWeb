@@ -14,4 +14,5 @@ public interface UsersService {
 
     List<UsersDto> getAllUsers();
     boolean updateUserStatus(Long id, long newStatus);
+
 }
