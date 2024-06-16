@@ -9,6 +9,10 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import numeral from 'numeral';
 import { useNavigate } from 'react-router-dom';
+import { Modal } from 'antd';
+import { Input } from 'antd';
+import { Form } from 'react-bootstrap';
+import ReactStars from "react-rating-stars-component";
 
 const OrderDetails = () => {
 	const navigate = useNavigate();
@@ -50,7 +54,7 @@ const OrderDetails = () => {
 			console.log(updatedOrderDetail);
 			const firstOrder = updatedOrderDetail[0];
 			setInfoOrder(firstOrder);
-			const totalValue = updatedOrderDetail.reduce((total, item) => total + item.productId.price, 0);
+			const totalValue = updatedOrderDetail.reduce((total, item) => total + item.productId.price - (item.productId.price * (item.productId.percentDiscount / 100)), 0);
 			setTotalValue(totalValue);
 		} catch (error) {
 			setLoading(false);
@@ -73,6 +77,67 @@ const OrderDetails = () => {
 		fetchOrderDetail();
 	}, [oderId]);
 	const discountPrice = (totalValue + 30000) - infoOrder?.orderId?.totalPrice;
+
+	//đánh giá
+
+	const [comments, setComments] = useState({});
+	const createReview = async () => {
+		try {
+			const promises = orderDetail.map(async (order) => {
+				await axios.post(`/api/review`, {
+					userId: { id: userData.id },
+					productId: { id: order.productId.id },
+					ordersId: { id: order.orderId.id },
+					rating: rating[order.productId.id] || '5',
+					content: comments[order.productId.id] || '',
+					status: 1
+				});
+			});
+
+			await Promise.all(promises);
+			console.log('Đánh giá đã được tạo');
+			window.alert('Đánh giá sản phẩm thành công');
+			handleCancel();
+			fetchOrderDetail();
+		} catch (error) {
+			console.error('Lỗi khi tạo đánh giá:', error);
+		}
+	};
+
+	const handleCommentChange = (productId, value) => {
+		setComments(prevState => ({
+			...prevState,
+			[productId]: value
+		}));
+		console.log(value);
+	};
+
+
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const showModal = () => {
+		setIsModalOpen(true);
+	};
+	const handleOk = () => {
+		createReview();
+	};
+	const handleCancel = () => {
+		setIsModalOpen(false);
+	};
+	const [rating, setRating] = useState({});
+
+
+
+	const ratingChanged = (newRating, productId) => {
+		
+		setRating(prevState => ({
+			...prevState,
+			[productId]: newRating
+		}));
+		console.log(newRating);
+
+
+	};
+	
 	return (
 		<div className='m-3  pb-4'>
 			<div className='m-3 pt-3'>
@@ -134,7 +199,7 @@ const OrderDetails = () => {
 								<h6 className="product-name">{item.productId.productName}</h6>
 								<p className='mt-3'>x {item.quantity}</p>
 							</div>
-							<p className="product-price">{numeral(item.productId.price).format('0,0')} đ</p>
+							<p className="product-price">{numeral(item.productId.price - (item.productId.price * (item.productId.percentDiscount / 100))).format('0,0')} đ</p>
 						</div>
 
 					</div>
@@ -192,11 +257,58 @@ const OrderDetails = () => {
 							Hủy đơn hàng
 						</Button>
 					</div>
-				) : (null)}
+				) : (
 
+					infoOrder?.orderId?.status?.id === 3 ? (
+						<div className='pt-4' style={{ display: 'flex', justifyContent: 'center' }}>
+							<Button variant="primary" className='text-center' style={{ backgroundImage: 'linear-gradient(310deg, rgb(155, 207, 83), rgb(65, 109, 25))', border: 'none', fontWeight: 'bold', color: 'white' }}
+								onClick={showModal}>
+								Đánh giá
+							</Button>
+						</div>
+					) : (null)
+				)}
 
 
 			</div>
+
+			<Modal title="Đánh giá sản phẩm" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} okText="Lưu">
+				<div>
+					{orderDetail.map((item) => (
+
+						<div className='m-3 mb-4' key={item.orderDetailId} >
+							<div className="product-row">
+								<img src={item.productImage} className='image' alt='Product' style={{ width: '80px' }} />
+								<div className="info">
+									<h6 className="product-name">{item.productId.productName}</h6>
+								</div>
+							</div>
+							<div className='mt-3' style={{ display: 'flex', alignItems: 'center' }}>
+								<h6 style={{ marginRight: '10px', margin: 0, padding: 0 }}>Chất lượng sản phẩm: </h6>
+								<ReactStars
+									count={5}
+									value={5}
+
+									onChange={(newRating) => ratingChanged(newRating, item.productId.id)}
+									size={30}
+									activeColor="#ffd700"
+								/>
+							</div>
+							<div className='mt-4 mb-4'>
+								{/* <TextArea rows={4} placeholder="Nhập đánh giá của bạn về sản phẩm của chúng tôi" maxLength={6} 
+									onChange={(e) => handleCommentChange(item.productId.id, e.target.value)}
+								/> */}
+								<Form.Control as="textarea" rows={5}
+									onChange={(e) => handleCommentChange(item.productId.id, e.target.value)}
+								/>
+
+							</div>
+						</div>
+
+					))}
+
+				</div>
+			</Modal>
 
 		</div>
 	)

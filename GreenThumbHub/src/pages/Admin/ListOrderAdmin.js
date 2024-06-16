@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Container } from 'react-bootstrap';
 import Sidebar from "../../components/SideBar";
 import { Col, Row, Table, Button } from 'antd';
+import AdminNavbar from '../../components/AdminNavbar';
 
 const ListOrder = () => {
     const [orders, setOrders] = useState([]);
@@ -90,7 +91,7 @@ const ListOrder = () => {
     return (
         <div>
             <Row>
-                <Col lg={4} style={{ marginRight: 25 }}>
+                <Col lg={4} style={{ marginRight: 25, background: '#9BCF53', height: '100vh' }}>
                     <Sidebar />
                 </Col>
                 <Col
@@ -99,9 +100,9 @@ const ListOrder = () => {
                     md={{ span: 18, order: 1 }}
                     lg={{ span: 18, order: 1 }}
                     xl={{ span: 18, order: 1 }}
-                    style={{ backgroundColor: '#80808012' }}
                     className='mt-4'
                 >
+                    <AdminNavbar/>
                     <Table dataSource={orders} columns={columns} />
                 </Col>
             </Row>

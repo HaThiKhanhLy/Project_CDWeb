@@ -1,7 +1,10 @@
 import React from 'react';
-import { Col, Row, Table, Button } from 'antd';
+
 import { Container } from 'react-bootstrap';
 import { Link, Outlet } from 'react-router-dom';
+import Sidebar from "../../components/SideBar";
+import { Col, Row, Table, Button } from 'antd';
+import AdminNavbar from '../../components/AdminNavbar';
 
 const ListProducts = () => {
     const dataSource = [
@@ -57,27 +60,22 @@ const ListProducts = () => {
 
     return (
         <div>
-            <Container className='mt-4 mb-4'>
-                <Row>
-                    <Col
-                        xs={{ span: 24, order: 2 }}
-                        sm={{ span: 24, order: 2 }}
-                        md={{ span: 18, order: 1 }}
-                        lg={{ span: 18, order: 1, push: 6 }}
-                        style={{ backgroundColor: '#80808012' }}
-                    >
-                        <Table dataSource={dataSource} columns={columns} />
-                    </Col>
-                    <Col
-                        xs={{ span: 24, order: 1 }}
-                        sm={{ span: 24, order: 1 }}
-                        md={{ span: 6, order: 2 }}
-                        lg={{ span: 6, order: 2, pull: 18 }}
-                    >
-                        <span>sản phẩm</span>
-                    </Col>
-                </Row>
-            </Container>
+            <Row>
+                <Col lg={4} style={{ marginRight: 25, background: '#9BCF53', height: '100vh' }}>
+                    <Sidebar />
+                </Col>
+                <Col
+                    xs={{ span: 24, order: 2 }}
+                    sm={{ span: 24, order: 2 }}
+                    md={{ span: 18, order: 1 }}
+                    lg={{ span: 18, order: 1 }}
+                    xl={{ span: 18, order: 1 }}
+                    className='mt-4'
+                >
+                    <AdminNavbar />
+
+                </Col>
+            </Row>
         </div>
     );
 }

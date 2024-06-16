@@ -15,6 +15,7 @@ const Product = () => {
   const [selectedProduct, setSelectedProduct] = useState(
     products.filter((item) => parseInt(item.id) === parseInt(id))[0]
   );
+  const [averageRating, setAverageRating] = useState();
   // lấy products theo id
   const [currentProduct, setCurrentProduct] = useState(
     products.filter((item) => parseInt(item.id) === parseInt(id))[0]
@@ -37,6 +38,9 @@ const Product = () => {
   }, [selectedProduct, id]);
 
   useWindowScrollToTop();
+
+  const [reviews, setReviews] = useState([]);
+
   useEffect(() => {
     const fetchProduct = async () => {
       try {
@@ -51,19 +55,48 @@ const Product = () => {
       }
     };
 
+    const fetchReview = async () => {
+      try {
+        const response = await axios.get(`/api/review/${id}`);
+        const reviewData = response.data;
+        setReviews(reviewData);
+
+
+        if (reviewData !== null && reviewData.length > 0) {
+          let totalRating = 0;
+          reviewData.forEach((review) => {
+            totalRating += review.rating;
+            // fetchReply(review.id);
+
+          });
+
+           setAverageRating(totalRating / reviewData.length);
+
+        } else {
+         
+        }
+
+
+      } catch (error) {
+       
+      }
+    };
+
     fetchProduct();
+    fetchReview();
   }, [id]);
   return (
     <Fragment>
       <Banner title={selectedProduct?.productName} />
-      <ProductDetails selectedProduct={currentProduct}/>
-      <ProductReviews selectedProduct={currentProduct} />
-      <section className="related-products">
+      <ProductDetails selectedProduct={currentProduct} averageRating={averageRating} />
+     
+      <ProductReviews selectedProduct={currentProduct} reviews={reviews}  />
+      {/* <section className="related-products">
         <Container>
           <h3>You might also like</h3>
         </Container>
         <ShopList productItems={relatedProducts} />
-      </section>
+      </section> */}
     </Fragment>
   );
 };

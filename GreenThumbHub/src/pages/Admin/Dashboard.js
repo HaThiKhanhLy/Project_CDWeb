@@ -12,11 +12,11 @@ const Dashboard = () => {
   return (
     <>
       <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center">
-        {/* Header content */}
+      
       </div>
 
       <Row>
-        <Col xs={12} md={3} lg={2} xl={2} className="mb-4">
+        <Col xs={12} md={3} lg={2} xl={2} className="mb-4" style={{ background: '#9BCF53', height: '100vh' }}>
           <Sidebar />
         </Col>
         <Col xs={12} md={9} lg={10} xl={10}>
@@ -30,7 +30,7 @@ const Dashboard = () => {
             </Col>
 
             <Col xs={12} lg={6} className="mb-4">
-              {/* Your main content */}
+            
             </Col>
           </Row>
         </Col>

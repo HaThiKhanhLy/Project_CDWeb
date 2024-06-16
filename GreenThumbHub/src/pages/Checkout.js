@@ -433,7 +433,7 @@ const Checkout = () => {
                         <hr className="hr" />
                         <div className='d-flex justify-content-between mt-3'>
                             <span>Tổng cổng</span>
-                            <span style={{ fontSize: '25px' }}>10.000đ</span>
+                            <span style={{ fontSize: '25px' }}>{numeral(totalPrice + 30000 - discountAmount).format('0,0')}đ</span>
                         </div>
                         <Button
                             style={{
