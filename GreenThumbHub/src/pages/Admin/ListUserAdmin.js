@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Col, Row, Table, Button, message } from 'antd';
 import Sidebar from "../../components/SideBar";
 import './ListUser.css';
+import AdminNavbar from '../../components/AdminNavbar';
 
 const ListUser = () => {
     const [users, setUsers] = useState([]);
@@ -88,7 +89,7 @@ const ListUser = () => {
         <div>
             <div>
                 <Row>
-                    <Col lg={4} style={{ marginRight: 25 }}>
+                    <Col lg={4} style={{ marginRight: 25, backgroundColor: '#9BCF53', height: '100vh' }}>
                         <Sidebar />
                     </Col>
                     <Col
@@ -97,9 +98,10 @@ const ListUser = () => {
                         md={{ span: 18, order: 1 }}
                         lg={{ span: 18, order: 1 }}
                         xl={{ span: 18, order: 1 }}
-                        style={{ backgroundColor: '#80808012' }}
+                      
                         className='mt-4'
                     >
+                        <AdminNavbar />
                         <Table dataSource={users} columns={columns} />
                     </Col>
                 </Row>

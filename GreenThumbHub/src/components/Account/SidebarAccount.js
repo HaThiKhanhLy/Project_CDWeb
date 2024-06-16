@@ -59,33 +59,21 @@ const SidebarAccount = () => {
 	const toggleCollapsed = () => {
 		setCollapsed(!collapsed);
 	};
-
+	const userData = JSON.parse(localStorage.getItem('userData'));
   return (
 	<div className='mt-4 mb-4'>
-		{/* <ul>
-			  <Link to="info">thông tin</Link>
-			  <Link to="order">Đơn hàng</Link>
-			  
-		</ul> */}
+		
 		  <div
 			  style={{
 				  width: 256,
 			  }}
 		  >
-			  {/* <Button
-				  type="primary"
-				  onClick={toggleCollapsed}
-				  style={{
-					  marginBottom: 16,
-				  }}
-			  >
-				  {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-			  </Button> */}
+			  
 			  <Space size={24} className='m-3'>
 				  <Badge dot>
 					  <Avatar shape="square" icon={<UserOutlined />} />
 				  </Badge>
-				  <h6>Nguyễn Văn A</h6>
+				  <h6>{userData.userName}</h6>
 			  </Space>
 			  <Menu
 				  defaultSelectedKeys={['1']}

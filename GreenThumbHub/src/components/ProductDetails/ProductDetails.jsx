@@ -10,9 +10,10 @@ import { FaFacebook, FaFacebookMessenger  } from "react-icons/fa";
 import { useParams } from "react-router-dom";
 import axios from 'axios';
 import { useCart } from "../../pages/CartContext";
+import numeral from "numeral";
 
 
-const ProductDetails = ({ selectedProduct }) => {
+const ProductDetails = ({ selectedProduct, averageRating }) => {
   const userData = JSON.parse(localStorage.getItem('userData'));
   const [quantity, setQuantity] = useState(1);
   const handleQuantityChange = (e) => {
@@ -21,8 +22,7 @@ const ProductDetails = ({ selectedProduct }) => {
 
   const [productImages, setProductImages] = useState([]);
   const [selectedImage, setSelectedImage] = useState('');
-  
-
+  const [rating, setRating] = useState(0);
   useEffect(() => {
     const fetchProductImage = async () => {
       try {
@@ -38,6 +38,7 @@ const ProductDetails = ({ selectedProduct }) => {
     };
     
     fetchProductImage();
+    setRating(averageRating);
   }, [selectedProduct]);
 
   const responsive = {
@@ -92,7 +93,7 @@ const ProductDetails = ({ selectedProduct }) => {
   };
 
 
-
+  const starttting = Math.round(rating)
 
   return (
     <section className="product-page">
@@ -124,17 +125,16 @@ const ProductDetails = ({ selectedProduct }) => {
           <Col md={6}>
             <h2>{selectedProduct.productName}</h2>
             <div className="rate">
-              <div className="stars">
-                <i className="fa fa-star"></i>
-                <i className="fa fa-star"></i>
-                <i className="fa fa-star"></i>
-                <i className="fa fa-star"></i>
-                <i className="fa fa-star"></i>
+              <div style={{ color: 'yellow' }}>
+                {Array.from({ length: starttting }, (_, index) => (
+                  <i key={index} className="fa fa-star" style={{ marginLeft: '5px' }}></i>
+                ))}
               </div>
-              <span>{selectedProduct?.avgRating} ratings</span>
+
+              <span> Đánh giá : {starttting}/5</span>
             </div>
             <div className="info">
-              <span className="price">${selectedProduct?.price}</span>
+              <span className="price">{numeral((selectedProduct?.price - (selectedProduct?.price * (selectedProduct?.percentDiscount /100) ))).format('0,0')} đ</span>
 
               <span>Danh mục: {selectedProduct?.category.name}</span>
 

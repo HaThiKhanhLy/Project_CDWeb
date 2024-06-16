@@ -54,7 +54,7 @@ const MainLayout = () => {
   const location = useLocation();
   const hideNavAndFooter = location.pathname === '/dashboard'|| 
   location.pathname === '/listOrderAdmin' || 
-  location.pathname === '/listProductsAdmin' || 
+  location.pathname === '/listProductAdmin' || 
   location.pathname === '/listUserAdmin' || 
   location.pathname.startsWith('/orderDetail');
   return (
@@ -106,6 +106,11 @@ const MainLayout = () => {
         <Route path="/orderDetail/:id" element={
           <PrivateRoute>
             <DetailOrderAdmin />
+          </PrivateRoute>
+        } />
+        <Route path="/listProductAdmin" element={
+          <PrivateRoute>
+            <ListProductsAdmin />
           </PrivateRoute>
         } />
       </Routes>
