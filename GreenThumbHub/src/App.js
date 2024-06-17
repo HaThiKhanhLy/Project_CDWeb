@@ -23,6 +23,8 @@ import ListProductsAdmin from "./pages/Admin/ListProductsAdmin";
 import ListUserAdmin from "./pages/Admin/ListUserAdmin";
 import PrivateRoute from "./components/PrivateRoute"; // Import thành phần PrivateRoute
 import DetailOrderAdmin from './pages/Admin/DetailOrderAdmin';
+import NewProductAdmin from "./pages/Admin/NewProductAdmin";
+import EditProductAdmin from "./pages/Admin/EditProductAdmin";
 
 const Home = lazy(() => import("./pages/Home"));
 const Shop = lazy(() => import("./pages/Shop"));
@@ -52,11 +54,13 @@ function App() {
 
 const MainLayout = () => {
   const location = useLocation();
-  const hideNavAndFooter = location.pathname === '/dashboard'|| 
-  location.pathname === '/listOrderAdmin' || 
-  location.pathname === '/listProductAdmin' || 
-  location.pathname === '/listUserAdmin' || 
-  location.pathname.startsWith('/orderDetail');
+  const hideNavAndFooter = location.pathname === '/dashboard' ||
+    location.pathname === '/listOrderAdmin' ||
+    location.pathname === '/listProductAdmin' ||
+    location.pathname === '/listUserAdmin' ||
+    location.pathname === '/newProductAdmin' ||
+    location.pathname.startsWith ('/editProductAdmin') ||
+    location.pathname.startsWith('/orderDetail');
   return (
     <>
       {!hideNavAndFooter && <NavBar />}
@@ -70,19 +74,19 @@ const MainLayout = () => {
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/forgetPass" element={<ForgetPassword />} />
         <Route path="/newPassword" element={<NewPassword />} />
-        
+
         <Route path="/account" element={
           <PrivateRoute>
             <Account />
           </PrivateRoute>
         }>
-          <Route index element={<Info />} /> 
+          <Route index element={<Info />} />
           <Route path="order" element={<Order />} />
           <Route path="info" element={<Info />} />
           <Route path="order/order-details/:id" element={<OrderDetails />} />
           <Route path="changePassword" element={<ChangePassword />} />
         </Route>
-        
+
         <Route path="/dashboard" element={
           <PrivateRoute>
             <Dashboard />
@@ -111,6 +115,16 @@ const MainLayout = () => {
         <Route path="/listProductAdmin" element={
           <PrivateRoute>
             <ListProductsAdmin />
+          </PrivateRoute>
+        } />
+        <Route path="/newProductAdmin" element={
+          <PrivateRoute>
+            <NewProductAdmin />
+          </PrivateRoute>
+        } />
+        <Route path="/editProductAdmin/:id" element={
+          <PrivateRoute>
+            <EditProductAdmin />
           </PrivateRoute>
         } />
       </Routes>

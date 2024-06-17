@@ -29,4 +29,10 @@ public class ImgProductController {
         List<ImgProductDto> imgProductDtos = productsService.getAllImageByProductID(productID);
         return  ResponseEntity.ok(imgProductDtos);
     }
+
+    @DeleteMapping("detele/{id}")
+    public ResponseEntity<?> deleteImgProduct(@PathVariable("id") Long id){
+        productsService.deleteImgProduct(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
