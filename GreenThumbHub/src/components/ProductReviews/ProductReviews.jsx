@@ -23,7 +23,8 @@ const ProductReviews = ({ selectedProduct, reviews }) => {
           </li>
         </ul>
         {listSelected === "detail" ? (
-          <p>{selectedProduct.detail}</p>
+         
+           <div dangerouslySetInnerHTML={{ __html: selectedProduct?.detail }} />
         ) : (
           <div className="rates">
             

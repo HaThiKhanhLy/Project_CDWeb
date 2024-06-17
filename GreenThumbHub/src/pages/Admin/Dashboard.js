@@ -1,40 +1,54 @@
 import React from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCashRegister, faChartLine, faCloudUploadAlt, faPlus, faRocket, faTasks, faUserShield } from '@fortawesome/free-solid-svg-icons';
-import { Col, Row, Button, Dropdown, ButtonGroup } from '@themesberg/react-bootstrap';
+
+import { Row, Col, Button } from 'antd';
 
 import { CounterWidget, CircleChartWidget, BarChartWidget, TeamMembersWidget, ProgressTrackWidget, RankingWidget, SalesValueWidget, SalesValueWidgetPhone, AcquisitionWidget } from "../../components/Widgets";
 import { PageVisitsTable } from "../../components/Tables";
-import { trafficShares, totalOrders } from "../../data/charts";
+
 import Sidebar from "../../components/SideBar";
+import AdminNavbar from "../../components/AdminNavbar";
 
 const Dashboard = () => {
   return (
     <>
-      <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center">
-      
+
+      <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
+        <Row style={{ flex: '1 0 auto', overflow: 'hidden' }}>
+          <Col xs={6} sm={6} md={6} lg={6} xl={6} style={{ background: '#9BCF53', height: '100vh', overflowY: 'auto' }}>
+            <Sidebar />
+          </Col>
+          <Col xs={18} sm={18} md={18} lg={18} xl={18} style={{ height: '100vh', overflowY: 'auto' }}>
+            <div>
+              <AdminNavbar />
+            </div>
+            <div style={{ backgroundImage: 'linear-gradient(310deg, rgb(255 246 126), rgb(155 207 83))', minHeight: '50vh', position: 'relative' }}>
+              <div style={{
+                top: '0%',
+                left: '50%',
+                position: 'absolute',
+                transform: 'translateX(-50%)',
+                backgroundColor: 'white',
+                padding: '40px',
+                width: '90%',
+                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+                borderRadius: '10px',
+                marginTop: '20px',
+                overflow: 'auto'
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                  <h2>Thông kê</h2>
+                  {/* <Button>Thêm sản phẩm</Button> */}
+                </div>
+
+                <PageVisitsTable />
+                <TeamMembersWidget />
+              </div>
+            </div>
+
+          </Col>
+        </Row>
       </div>
-
-      <Row>
-        <Col xs={12} md={3} lg={2} xl={2} className="mb-4" style={{ background: '#9BCF53', height: '100vh' }}>
-          <Sidebar />
-        </Col>
-        <Col xs={12} md={9} lg={10} xl={10}>
-          <Row>
-            <Col xs={12} className="mb-4">
-              <PageVisitsTable />
-            </Col>
-
-            <Col xs={12} lg={6} className="mb-4">
-              <TeamMembersWidget />
-            </Col>
-
-            <Col xs={12} lg={6} className="mb-4">
-            
-            </Col>
-          </Row>
-        </Col>
-      </Row>
     </>
   );
 };

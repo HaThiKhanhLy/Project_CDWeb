@@ -139,7 +139,7 @@ const ProductDetails = ({ selectedProduct, averageRating }) => {
               <span>Danh mục: {selectedProduct?.category.name}</span>
 
             </div>
-            <p>{selectedProduct.detail}</p>
+            {/* <p>{selectedProduct.detail}</p> */}
             <input
               className="qty-input"
               type="number"

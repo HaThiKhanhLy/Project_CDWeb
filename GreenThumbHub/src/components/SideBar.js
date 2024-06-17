@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Nav } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -18,14 +18,26 @@ import {
 import { Button, Menu } from 'antd';
 import logo from ".././Images/green.png";
 const Sidebar = () => {
-  const [collapsed, setCollapsed] = useState(false);
-  const toggleCollapsed = () => {
-    setCollapsed(!collapsed);
-  };
+  
+  const [collapsed, setCollapsed] = useState(window.innerWidth < 768);
+ 
+  const location = useLocation();
   const handleLogout = () => {
     localStorage.removeItem('userData');
     navigate('/login');
   };
+  useEffect(() => {
+    const handleResize = () => {
+      setCollapsed(window.innerWidth < 768); // Update state on window resize
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    // Clean up event listener on component unmount
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
   const items = [
     {
       key: '1',
@@ -61,42 +73,10 @@ const Sidebar = () => {
 
   return (
  
-    <div style={{ background: '#9BCF53'}}>
-         {/* <Nav className="d-md-block bg-custom sidebar" activeKey="/dashboard">
-    <div className="sidebar-sticky"></div>
-       <Nav.Item>
-         <Nav.Link as={Link} to="/dashboard/orders" className="text-white">
-           <FontAwesomeIcon icon={faShoppingCart} className="me-2" /> 
-           <Link to="/listOrderAdmin" style={{ textDecoration: 'none', color:'white' }}>Đơn hàng</Link>
-         </Nav.Link>
-       </Nav.Item> */}
-    {/* //   <Nav.Item>
-    //     <Nav.Link as={Link} to="/dashboard/products" className="text-white">
-    //       <FontAwesomeIcon icon={faBox} className="me-2" /> 
-    //       <Link to="/listProductsAdmin" style={{ textDecoration: 'none', color:'white' }}>Sản phẩm</Link>
-    //     </Nav.Link>
-    //   </Nav.Item>
-    //   <Nav.Item>
-    //     <Nav.Link as={Link} to="/listUserAdmin" className="text-white">
-    //       <FontAwesomeIcon icon={faUser} className="me-2" /> 
-    //       <Link to="/listUserAdmin" style={{ textDecoration: 'none', color:'white' }}>Người dùng</Link>
-    //     </Nav.Link>
-    //   </Nav.Item>
-    //   <Nav.Item>
-    //     <Nav.Link as={Link} to="/dashboard/users" className="text-white">
-    //       <FontAwesomeIcon icon={faUser} className="me-2" /> Thống kê
-    //     </Nav.Link>
-    //   </Nav.Item>
-    //   <Nav.Item>
-    //     <Nav.Link onClick={handleLogout} className="text-white">
-    //       <FontAwesomeIcon icon={faSignOutAlt} className="me-2" /> Đăng xuất
-    //     </Nav.Link>
-    //   </Nav.Item> */}
-    {/* /</Nav> */}
+    <div style={{ background: '#9BCF53', width: collapsed ? '80px' : '100%' }}>
       <div
         style={{
           width: '100%',
-          // backgroundColor: '#f0f2f5',
         }}
       >
         <div className='mt-3 mb-4'>
@@ -112,10 +92,11 @@ const Sidebar = () => {
           defaultSelectedKeys={['1']}
           defaultOpenKeys={['sub1']}
           mode="inline"
-         // theme="light"
+          // theme="light"
           inlineCollapsed={collapsed}
           items={items}
           style={{ backgroundColor: '#9BCF53' }}
+       
         />
       </div>
     </div>

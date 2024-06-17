@@ -20,4 +20,10 @@ public interface ProductsService {
     List<ProductsDto> getAllProductsByName(String productName);
 
     List<ProductsDto> getAllProductsByCategory(Long idCategory);
+
+    ProductsDto updateProduct(long productId, ProductsDto updateProduct);
+
+    void deleteImgProduct(Long id) ;
+
+    ProductsDto deleteProduct(Long productId);
 }
